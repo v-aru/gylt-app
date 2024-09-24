@@ -27,33 +27,33 @@ const Nav = styled.nav`
 const Navigation = () => (
   <Nav>
     <Link href="/">
-    <Image src="/dashboard.svg" alt="Dashboard" width={35} height={35} />
+    <Image src="/images/dashboard.svg" alt="Dashboard" width={35} height={35} />
     </Link>
 
     <Link href="/habits">
       {/* Habits */}
-      <Image src="/habits.png" alt="Habits" width={40} height={40} />
+      <Image src="/images/habits.png" alt="Habits" width={40} height={40} />
     </Link>
 
-    <Link href="/health">
+    {/* <Link href="/health">
       {/* Health Tracker */}
-      <Image src="/health-icon.svg" alt="Health Tracker" width={40} height={40} />
-    </Link>
+      {/* <Image src="/images/health-icon.svg" alt="Health Tracker" width={40} height={40} />
+    </Link> */} 
 
-    <Link href="/todos">
+    {/* <Link href="/todos"> */}
       {/* To-Dos */}
-      <Image src="/todo-list.svg" alt="To-Dos" width={40} height={40} />
-    </Link>
+      {/* <Image src="/images/todo-list.svg" alt="To-Dos" width={40} height={40} />
+    </Link> */}
 
     <Link href="/subscriptions">
       {/* Subscriptions */}
-      <Image src="/subscriptions.svg" alt="Subscriptions" width={40} height={40} />
+      <Image src="/images/subscriptions.svg" alt="Subscriptions" width={40} height={40} />
     </Link>
 
-    <Link href="/timer">
+    {/* <Link href="/timer">
       {/* Pomodoro Timer */}
-      <Image src="/pomodoro-timer.svg" alt="Pomodoro Timer" width={45} height={45} />
-    </Link>
+      {/* <Image src="/images/pomodoro-timer.svg" alt="Pomodoro Timer" width={45} height={45} />
+    </Link> */} 
 
   </Nav>
 );
