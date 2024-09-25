@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from 'react';
 import HabitList from '../../components/Habits/HabitList';
 import CreateHabitLink from '../../components/Habits/CreateHabitLink';
@@ -17,19 +16,19 @@ const Header = styled.h1`
   margin-bottom: 20px;
 `;
 
-const AddHabitButton = styled.button`
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+// const AddHabitButton = styled.button`
+//   margin-top: 20px;
+//   padding: 10px 20px;
+//   background-color: #4caf50;
+//   color: white;
+//   border: none;
+//   border-radius: 5px;
+//   cursor: pointer;
 
-  &:hover {
-    background-color: #45a049;
-  }
-`;
+//   &:hover {
+//     background-color: #45a049;
+//   }
+// `;
 
 export default function HabitsPage() {
   const [habits, setHabits] = useState([

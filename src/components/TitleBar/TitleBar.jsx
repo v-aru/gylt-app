@@ -1,4 +1,3 @@
-"use client";
 import styled from "styled-components";
 import Image from "next/image";
 
@@ -26,9 +25,9 @@ const Title = styled.h1`
 export default function TitleBar() {
   return (
     <HeaderContainer>
-        <Title>
-            <Image src="/images/Logo.png" alt="GYLT" width={150} height={50}/>
-        </Title>
-      </HeaderContainer>
+      <Title>
+        <Image src="/images/Logo.png" alt="GYLT" width={150} height={50}/>
+      </Title>
+    </HeaderContainer>
   );
 }
