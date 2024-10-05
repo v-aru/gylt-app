@@ -19,27 +19,36 @@ const HabitCheckbox = styled.input`
   height: 20px;
 `;
 
-const ProgressTracker = styled.div`
+const HabitDetails = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: space-around;
-  width: 100px;
-  padding-left: 10px;
+  flex-direction: column;
 `;
 
-export default function HabitList({ habits }) {
+const HabitFrequency = styled.span`
+  font-size: 0.9rem;
+  color: #666;
+`;
+
+const HabitCategory = styled.span`
+  font-size: 0.9rem;
+  color: #666;
+`;
+
+export default function HabitList({ habits, onToggleHabit }) {
   return (
     <div>
       {habits.map((habit) => (
-        <HabitItem key={habit.id}>
-          <HabitName>{habit.name}</HabitName>
-          <ProgressTracker>
-            <HabitCheckbox
-              type="checkbox"
-              checked={habit.completed}
-              onChange={() => {}}
-            />
-          </ProgressTracker>
+        <HabitItem key={habit.id} style={{ backgroundColor: habit.color }}>
+          <HabitDetails>
+            <HabitName>{habit.habitName}</HabitName>
+            <HabitCategory>Category: {habit.category}</HabitCategory>
+            <HabitFrequency>Frequency: {habit.frequency}</HabitFrequency>
+          </HabitDetails>
+          <HabitCheckbox
+            type="checkbox"
+            checked={habit.completed || false} // Adjusting to ensure it defaults to false if undefined
+            onChange={() => onToggleHabit(habit.id)}
+          />
         </HabitItem>
       ))}
     </div>
