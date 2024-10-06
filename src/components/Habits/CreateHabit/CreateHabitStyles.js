@@ -1,7 +1,5 @@
 import styled from "styled-components";
 
-export const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'];
-
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
@@ -18,48 +16,9 @@ export const Select = styled.select`
   margin-bottom: 10px;
 `;
 
-const ColorGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(6, 1fr); /* 6 columns */
-  gap: 10px; /* Spacing between colors */
-  margin: 10px 0;
-`;
-
-const ColorCircle = styled.div`
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: ${(props) => props.color};
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: border 0.3s;
-
-  &:hover {
-    border: 2px solid #000; /* Highlight on hover */
-  }
-`;
-
-export const CustomColorPicker = ({ selectedColor, onSelectColor }) => {
-  return (
-    <ColorGrid>
-      {colors.map((color) => (
-        <ColorCircle
-          key={color}
-          color={color}
-          onClick={() => onSelectColor(color)}
-          style={{
-            border: selectedColor === color ? '2px solid #000' : '2px solid transparent'
-          }}
-        />
-      ))}
-    </ColorGrid>
-  );
-};
-
-
 export const Button = styled.button`
   padding: 10px;
-  background-color: #0070f3;
+  background-color: #3c096c;
   color: white;
   border: none;
   border-radius: 5px;
@@ -77,10 +36,20 @@ const DaysButton = styled.button.attrs({ type: 'button' })`
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
 
   &:hover {
     background-color: ${(props) => (props.selected ? '#B6A6CA' : '#dcdcdc')};
+    transform: scale(1.05); 
   }
+`;
+
+const CustomDaysContainer = styled.div`
+  margin: 0; // Remove any margin
+  padding: 0; // Remove any padding
+  display: flex; // Change display to flex for better alignment
+  flex-direction: row; // Stack elements vertically
+  gap: 5px; // Add a little gap between elements, adjust as needed
 `;
 
 export const HabitFrequencySelector = ({ frequency, setFrequency, customDays, setCustomDays }) => {
@@ -99,25 +68,27 @@ export const HabitFrequencySelector = ({ frequency, setFrequency, customDays, se
       </div>
 
       {frequency === 'custom' && (
-        <div>
-          <p>Select days:</p>
-          {daysOfWeek.map((day) => (
-            <DaysButton
-              key={day}
-              selected={customDays.includes(day)}
-              onClick={(e) =>{
-                e.stopPropagation();
-                setCustomDays(
-                  customDays.includes(day)
-                    ? customDays.filter((d) => d !== day)
-                    : [...customDays, day]
-                );
-              }}
-            >
-              {day}
-            </DaysButton>
-          ))}
-        </div>
+        <>
+          <p style={{ margin: '0', padding: '0' }}>Select days:</p> 
+            <CustomDaysContainer>
+            {daysOfWeek.map((day) => (
+              <DaysButton
+                key={day}
+                selected={customDays.includes(day)}
+                onClick={(e) =>{
+                  e.stopPropagation();
+                  setCustomDays(
+                    customDays.includes(day)
+                      ? customDays.filter((d) => d !== day)
+                      : [...customDays, day]
+                  );
+                }}
+              >
+                {day}
+              </DaysButton>
+            ))}
+          </CustomDaysContainer>
+        </>
       )}
     </>
   );
