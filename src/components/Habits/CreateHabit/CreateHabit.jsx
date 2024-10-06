@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { colors, Form, Input, CustomColorPicker, Button, HabitFrequencySelector } from './CreateHabitStyles';
+import { Form, Input, Button, HabitFrequencySelector } from './CreateHabitStyles';
+import { colors, CustomColorPicker } from '@/components/ColorPicker/ColorPicker';
 
 export default function CreateHabit({ onSubmit }) {
   const [habitName, setHabitName] = useState('');
@@ -32,16 +33,19 @@ export default function CreateHabit({ onSubmit }) {
 
   return (
     <Form onSubmit={handleSubmit}>
+      <label htmlFor="habitName">Habit Name:</label>
       <Input
         type="text"
-        placeholder="Habit Name"
+        placeholder="Enter habit name"
         value={habitName}
         onChange={(e) => setHabitName(e.target.value)}
         required
       />
+
+      <label htmlFor="habitCategory">Habit Category:</label>
       <Input
         type="text"
-        placeholder="Habit Category"
+        placeholder="Enter habit category"
         value={category}
         onChange={(e) => setCategory(e.target.value)}
         required

@@ -4,6 +4,7 @@ const HabitItem = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 15px;
+  margin-top: 15px;
   margin-bottom: 15px;
   background-color: white;
   border-radius: 12px;
@@ -25,16 +26,6 @@ const HabitCheckbox = styled.input`
 const HabitDetails = styled.div`
   display: flex;
   flex-direction: column;
-`;
-
-const HabitFrequency = styled.span`
-  font-size: 0.9rem;
-  color: #666;
-`;
-
-const HabitCategory = styled.span`
-  font-size: 0.9rem;
-  color: #666;
 `;
 
 export default function HabitList({ habits, onToggleHabit }) {

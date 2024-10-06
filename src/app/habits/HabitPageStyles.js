@@ -3,7 +3,7 @@ import Calendar from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
 
 export const Container = styled.div`
-  max-width: 600px;
+  width: 90%;
   margin: 0 auto;
   padding: 20px;
   background-color: #D5C6E0;
@@ -31,8 +31,13 @@ export const StyledCalendarContainer = styled.div`
   justify-content: center;
 `;
 
-export const HabitListContainer = styled.div`
+export const StyledHabitListSection = styled.section`
+  background-color: #f9f9f9; /* Custom background */
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin-top: 30px;
+  width: 50%;
 `;
 
 export const StyledCalendar = styled(Calendar)`
