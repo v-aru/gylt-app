@@ -22,7 +22,7 @@ const HabitCheckbox = styled.input`
 export default function HabitItem({ habit }) {
   return (
     <HabitItemContainer>
-      <HabitName>{habit.name}</HabitName>
+      <HabitName>{habit.habitName}</HabitName>
       <HabitCheckbox type="checkbox" checked={habit.completed} onChange={onToggle} readOnly />
     </HabitItemContainer>
   );
