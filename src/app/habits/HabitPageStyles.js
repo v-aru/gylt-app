@@ -1,0 +1,123 @@
+import styled from "styled-components";
+import Calendar from "react-calendar";
+import 'react-calendar/dist/Calendar.css';
+
+export const Container = styled.div`
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #D5C6E0;
+`;
+
+// const AddHabitButton = styled.button`
+//   margin-top: 20px;
+//   padding: 10px 20px;
+//   background-color: #4caf50;
+//   color: white;
+//   border: none;
+//   border-radius: 5px;
+//   cursor: pointer;
+
+//   &:hover {
+//     background-color: #45a049;
+//   }
+// `;
+
+// Flexbox container to align the calendar and the habit list side by side
+
+export const StyledCalendarContainer = styled.div`
+  display: flex;
+  align-content: center;
+  justify-content: center;
+`;
+
+export const HabitListContainer = styled.div`
+  margin-top: 30px;
+`;
+
+export const StyledCalendar = styled(Calendar)`
+  max-width: 100%;
+  background-color: #B9B8D3;
+  border-radius: 8px;
+  border: 2px solid purple;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  .react-calendar__navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 5px;
+
+    button {
+      background-color: #1F5673;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      width: 40px;
+      height: 40px;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    button:hover {
+      background-color: #005bb5;
+    }
+  }
+
+  .react-calendar__month-view__weekdays {
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #006989;
+  }
+
+  .react-calendar__tile {
+    background-color: white;
+    border-radius: 50%;
+    // padding: 15px;
+    transition: background-color 0.2s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    &:enabled:hover {
+      background-color: #90C3C8;
+    }
+
+    &--active {
+      background-color: #759FBC;
+      color: white;
+    }
+
+    &--now {
+      background-color: #E8ADB6;
+      color: #b91c1c;
+    }
+  }
+`;
+
+export const PageHeader = styled.div`
+  background-color: purple;
+  color: white;
+  font-weight: bold;
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 8px;
+`;
+
+export const ListHeader = styled.div`
+  background-color: purple;
+  color: white;
+  font-weight: bold;
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 8px;
+`;

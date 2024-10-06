@@ -7,6 +7,7 @@ const Main = styled.main`
   align-items: center;
   flex-wrap: wrap;
   flex-direction: column;
+  background-color: #E5D9F2;
 
   h1 {
     
