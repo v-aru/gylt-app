@@ -1,10 +1,10 @@
 import Navigation from "../src/components/Navigation/Navigation";
-import { GlobalFontStyle } from './public/assets/fonts/GlobalFontStyle';
+// import { GlobalFontStyle } from './public/assets/fonts/GlobalFontStyle';
 
 function MyApp({ Component, pageProps }) {
   return (
     <div>
-      <GlobalFontStyle />
+      {/* <GlobalFontStyle /> */}
       <Navigation />
       <Component {...pageProps} />
     </div>

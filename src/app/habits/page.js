@@ -4,7 +4,7 @@ import { Container, StyledCalendarContainer, StyledCalendar, PageHeader, ListHea
 import HabitList from '../../components/Habits/HabitList/HabitList';
 import AddHabitButton from '@/components/Habits/CreateHabit/AddHabitButton';
 import CreateHabit from '@/components/Habits/CreateHabit/CreateHabit';
-import EditHabit from '@/components/Habits/EditHabit/Edithabit';
+import EditHabit from '@/components/Habits/EditHabit/EditHabit';
 import Modal from '@/components/Modal/Modal';
 import { CustomColorPicker } from '../../components/ColorPicker/ColorPicker';
 import { Quotes } from '../../../public/positiveQuotes';
