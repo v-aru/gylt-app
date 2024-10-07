@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const Button = styled.button`
-  background-color: #AAA1C8;
+  background-color: #3B185F;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -13,7 +13,7 @@ const Button = styled.button`
   z-index: 1000;
 
   &:hover {
-    background-color: #45a049;
+    background-color: #B6A6CA;
   }
 `;
 

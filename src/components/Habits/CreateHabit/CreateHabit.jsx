@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Form, Input, Button, HabitFrequencySelector } from './CreateHabitStyles';
-import { colors, CustomColorPicker } from '@/components/ColorPicker/ColorPicker';
+import { CustomColorPicker } from '@/components/ColorPicker/ColorPicker';
 
 export default function CreateHabit({ onSubmit }) {
   const [habitName, setHabitName] = useState('');
