@@ -6,7 +6,18 @@ export const Container = styled.div`
   width: 90%;
   margin: 0 auto;
   padding: 20px;
-  background-color: #D5C6E0;
+  // background-color: #D5C6E0;
+`;
+
+export const PageHeader = styled.div`
+  background-color: purple;
+  color: white;
+  font-weight: bold;
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 8px;
 `;
 
 // const AddHabitButton = styled.button`
@@ -29,24 +40,49 @@ export const StyledCalendarContainer = styled.div`
   display: flex;
   align-content: center;
   justify-content: center;
+  flex-direction: column;
+  padding: 20px;
+  gap: 5px;
 `;
 
-export const StyledHabitListSection = styled.section`
-  background-color: #f9f9f9; /* Custom background */
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  margin-top: 30px;
-  width: 50%;
+export const CalendarButtons = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-content: center;
+  flex-wrap: wrap;
+  width: 40%;
+  gap: 10px; 
+  margin: 0 auto; 
+  
+  button {
+    background-color: #1D267D; /* Green background */
+    color: white; /* White text */
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #5C469C; /* Darker green on hover */
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Focus shadow */
+    }
+  }
+
 `;
 
 export const StyledCalendar = styled(Calendar)`
-  max-width: 100%;
   background-color: #B9B8D3;
   border-radius: 8px;
   border: 2px solid purple;
   padding: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
 
   .react-calendar__navigation {
     display: flex;
@@ -105,17 +141,6 @@ export const StyledCalendar = styled(Calendar)`
   }
 `;
 
-export const PageHeader = styled.div`
-  background-color: purple;
-  color: white;
-  font-weight: bold;
-  font-size: 32px;
-  text-align: center;
-  margin-bottom: 20px;
-  border: none;
-  border-radius: 8px;
-`;
-
 export const ListHeader = styled.div`
   background-color: purple;
   color: white;
@@ -125,4 +150,13 @@ export const ListHeader = styled.div`
   margin-bottom: 20px;
   border: none;
   border-radius: 8px;
+`;
+
+export const StyledHabitListSection = styled.section`
+  background-color: #f9f9f9; /* Custom background */
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
+  width: 50%;
 `;
