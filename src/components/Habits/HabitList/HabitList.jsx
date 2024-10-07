@@ -16,10 +16,8 @@ export default function HabitList({ habits, onToggleHabit, onEditHabit }) {
           <HabitCheckbox
             type="checkbox"
             checked={habit.completed || false} 
-            onChange={(e) => {
-              e.stopPropagation();
-              onToggleHabit(habit.id);
-            }}
+            onClick={(e) => e.stopPropagation()} 
+            onChange={() => onToggleHabit(habit.id)}
           />
         </HabitItem>
       ))}

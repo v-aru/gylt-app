@@ -152,6 +152,13 @@ export const ListHeader = styled.div`
   border-radius: 8px;
 `;
 
+export const HabitsSection = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  margin-top: 40px;
+`;
+
 export const StyledHabitListSection = styled.section`
   background-color: #f9f9f9; /* Custom background */
   padding: 20px;
