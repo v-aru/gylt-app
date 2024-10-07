@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Container, StyledCalendarContainer, StyledCalendar, PageHeader, ListHeader, StyledHabitListSection, CalendarButtons } from './HabitPageStyles';
+import { Container, StyledCalendarContainer, StyledCalendar, PageHeader, ListHeader, StyledHabitListSection, CalendarButtons, HabitsSection } from './HabitPageStyles';
 import HabitList from '../../components/Habits/HabitList/HabitList';
 import AddHabitButton from '@/components/Habits/CreateHabit/AddHabitButton';
 import CreateHabit from '@/components/Habits/CreateHabit/CreateHabit';
@@ -129,14 +129,14 @@ export default function HabitsPage() {
       <PageHeader>&nbsp;H&nbsp;A&nbsp;B&nbsp;I&nbsp;T&nbsp;S&nbsp;</PageHeader>
 
       {/* Quotes Section */}
-        <QuotesSection>
+      <QuotesSection>
           <blockquote>
             {randomQuote.quote}
             <footer>- {randomQuote.author}</footer>
           </blockquote>
-        </QuotesSection>
+      </QuotesSection>
 
-        <StyledCalendarContainer>
+      <StyledCalendarContainer>
           <StyledCalendar
             onChange={(value) => {
               setDate(value);
@@ -151,22 +151,31 @@ export default function HabitsPage() {
             <button onClick={handleToday}>Today</button>
             <button onClick={handleTomorrow}>Tomorrow</button>
           </CalendarButtons>
-        </StyledCalendarContainer>
+      </StyledCalendarContainer>
+      
+      <HabitsSection>
+      <StyledHabitListSection>
+        <ListHeader>&nbsp;A&nbsp;L&nbsp;L&nbsp;&nbsp;H&nbsp;A&nbsp;B&nbsp;I&nbsp;T&nbsp;S&nbsp;</ListHeader>
+        <div>
+          <CustomColorPicker selectedColor={selectedColor} onSelectColor={setSelectedColor} />
+        </div>
+        <HabitList habits={habits} onToggleHabit={toggleHabit} onEditHabit={handleEditClick} />
+      </StyledHabitListSection>
 
-        <StyledHabitListSection>
-            <ListHeader>&nbsp;H&nbsp;A&nbsp;B&nbsp;I&nbsp;T&nbsp;&nbsp;&nbsp;L&nbsp;I&nbsp;S&nbsp;T&nbsp;</ListHeader>
-          
-            <div>
-              <CustomColorPicker selectedColor={selectedColor} onSelectColor={setSelectedColor} />
-            </div>
+      <StyledHabitListSection>
+        <ListHeader>&nbsp;H&nbsp;A&nbsp;B&nbsp;I&nbsp;T&nbsp;S&nbsp;&nbsp;F&nbsp;O&nbsp;R&nbsp;&nbsp;T&nbsp;H&nbsp;E&nbsp;&nbsp;D&nbsp;A&nbsp;Y&nbsp;</ListHeader>
+        <div>
+          <CustomColorPicker selectedColor={selectedColor} onSelectColor={setSelectedColor} />
+        </div>
+        < HabitList habits={filteredHabits} onToggleHabit={toggleHabit} onEditHabit={handleEditClick} />
+      </StyledHabitListSection>
 
-            <HabitList habits={filteredHabits} onToggleHabit={toggleHabit} onEditHabit={handleEditClick} />
+      </HabitsSection>
 
-
-        </StyledHabitListSection>
+      <HabitList habits={filteredHabits} onToggleHabit={toggleHabit} onEditHabit={handleEditClick} />
 
       <AddHabitButton onClick={() => {
-        setIsEditing(false); // Reset to create mode
+        setIsEditing(false); 
         setIsModalOpen(true);
       }} />
         
