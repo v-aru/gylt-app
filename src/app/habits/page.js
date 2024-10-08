@@ -1,4 +1,5 @@
 "use client";
+import '../../../public/globals.css';
 import React, { useState, useEffect } from 'react';
 import { Container, StyledCalendarContainer, StyledCalendar, PageHeader, ListHeader, StyledHabitListSection, CalendarButtons, HabitsSection } from './HabitPageStyles';
 import HabitList from '../../components/Habits/HabitList/HabitList';
@@ -17,8 +18,12 @@ export default function HabitsPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editingHabit, setEditingHabit] = useState(null);
   const [date, setDate] = useState(new Date());
-  const [selectedColor, setSelectedColor] = useState(null); 
   const [randomQuote, setRandomQuote] = useState({});
+  const [activeStartDate, setActiveStartDate] = useState(new Date());
+  //const [filteredHabits, setFilteredHabits] = useState([]); 
+  const [selectedColor, setSelectedColor] = useState(null); 
+  const [selectedColorAllHabits, setSelectedColorAllHabits] = useState(null); 
+  const [selectedColorDayHabits, setSelectedColorDayHabits] = useState(null); 
 
   useEffect(() => {
     // Pick a random quote when the component renders
@@ -41,8 +46,6 @@ export default function HabitsPage() {
     setIsModalOpen(false);
   };
 
-
-  // Handle editing an existing habit
   const editHabit = (updatedHabit) => {
     setHabits(habits.map(habit => 
       habit.id === updatedHabit.id ? updatedHabit : habit
@@ -61,26 +64,27 @@ export default function HabitsPage() {
 
   const handleDayClick = (value) => {
     setDate(value);
+    setActiveStartDate(value); 
   };
 
   const handleToday = () => {
-    const today = new Date(); // Always reset to today
-    setDate(today);
-    handleDayClick(today);
+    const today = new Date();
+    setDate(today); 
+    setActiveStartDate(today);
   };
 
   const handleYesterday = () => {
-    const today = new Date(); // Always reset to today
-    const yesterday = new Date(today.setDate(today.getDate() - 1)); // Subtract 1 day
-    setDate(yesterday);
-    handleDayClick(yesterday);
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1); 
+    setDate(yesterday); 
+    setActiveStartDate(yesterday);
   };
 
   const handleTomorrow = () => {
-    const today = new Date(); // Always reset to today
-    const tomorrow = new Date(today.setDate(today.getDate() + 1)); // Add 1 day
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);  
     setDate(tomorrow);
-    handleDayClick(tomorrow);
+    setActiveStartDate(tomorrow);
   };
 
   const getHabitsForDate = (selectedDate) => {
@@ -111,17 +115,15 @@ export default function HabitsPage() {
     });
   };
 
+  const selectedHabits = getHabitsForDate(date);
+
+  const filteredHabits = selectedColor ? selectedHabits.filter(habit => habit.color === selectedColor) : selectedHabits;
+
   const toggleHabit = (id) => {
     setHabits(habits.map((habit) => 
       habit.id === id ? { ...habit, completed: !habit.completed } : habit
     ));
   };
-
-  const selectedHabits = getHabitsForDate(date);
-
-  const filteredHabits = selectedColor
-    ? selectedHabits.filter(habit => habit.color === selectedColor)
-    : selectedHabits;
 
   return (
     <>
@@ -138,11 +140,10 @@ export default function HabitsPage() {
 
       <StyledCalendarContainer>
           <StyledCalendar
-            onChange={(value) => {
-              setDate(value);
-              handleDayClick(value);
-            }}
+            onChange={handleDayClick}
             value={date}
+            activeStartDate={activeStartDate}
+            onActiveStartDateChange={({ activeStartDate }) => setActiveStartDate(activeStartDate)} 
           />
 
           {/* Buttons for Yesterday, Today, Tomorrow */}
@@ -153,26 +154,24 @@ export default function HabitsPage() {
           </CalendarButtons>
       </StyledCalendarContainer>
       
-      <HabitsSection>
-      <StyledHabitListSection>
-        <ListHeader>&nbsp;A&nbsp;L&nbsp;L&nbsp;&nbsp;H&nbsp;A&nbsp;B&nbsp;I&nbsp;T&nbsp;S&nbsp;</ListHeader>
-        <div>
-          <CustomColorPicker selectedColor={selectedColor} onSelectColor={setSelectedColor} />
-        </div>
-        <HabitList habits={habits} onToggleHabit={toggleHabit} onEditHabit={handleEditClick} />
-      </StyledHabitListSection>
-
-      <StyledHabitListSection>
-        <ListHeader>&nbsp;H&nbsp;A&nbsp;B&nbsp;I&nbsp;T&nbsp;S&nbsp;&nbsp;F&nbsp;O&nbsp;R&nbsp;&nbsp;T&nbsp;H&nbsp;E&nbsp;&nbsp;D&nbsp;A&nbsp;Y&nbsp;</ListHeader>
-        <div>
-          <CustomColorPicker selectedColor={selectedColor} onSelectColor={setSelectedColor} />
-        </div>
-        < HabitList habits={filteredHabits} onToggleHabit={toggleHabit} onEditHabit={handleEditClick} />
-      </StyledHabitListSection>
-
+      
+      <HabitsSection>    
+          <StyledHabitListSection>
+            <ListHeader>&nbsp;a&nbsp;l&nbsp;l&nbsp;&nbsp;&nbsp;h&nbsp;a&nbsp;b&nbsp;i&nbsp;t&nbsp;s&nbsp;</ListHeader>
+            <div>
+              <CustomColorPicker selectedColor={selectedColorAllHabits} onSelectColor={setSelectedColorAllHabits} />
+            </div>
+            <HabitList habits={habits} onToggleHabit={toggleHabit} onEditHabit={handleEditClick} />
+          </StyledHabitListSection>
+        
+         <StyledHabitListSection>
+            <ListHeader>&nbsp;H&nbsp;a&nbsp;b&nbsp;i&nbsp;t&nbsp;s&nbsp;&nbsp;&nbsp;f&nbsp;o&nbsp;r&nbsp;&nbsp;&nbsp;t&nbsp;h&nbsp;e&nbsp;&nbsp;&nbsp;d&nbsp;a&nbsp;y&nbsp;</ListHeader>
+            <div>
+              <CustomColorPicker selectedColor={selectedColorDayHabits} onSelectColor={setSelectedColorDayHabits} />
+            </div>
+            <HabitList habits={filteredHabits} onToggleHabit={toggleHabit} onEditHabit={handleEditClick} />
+          </StyledHabitListSection>
       </HabitsSection>
-
-      <HabitList habits={filteredHabits} onToggleHabit={toggleHabit} onEditHabit={handleEditClick} />
 
       <AddHabitButton onClick={() => {
         setIsEditing(false); 
