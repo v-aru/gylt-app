@@ -2,6 +2,11 @@ import styled from 'styled-components';
 
 export const QuotesSection = styled.div`
   font-family: 'Playground', serif;
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
   background-color: #f9e9e9; 
   border-radius: 12px;
   padding: 10px;

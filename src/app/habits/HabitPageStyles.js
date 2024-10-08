@@ -12,12 +12,14 @@ export const Container = styled.div`
 export const PageHeader = styled.div`
   background-color: purple;
   color: white;
-  font-weight: bold;
   font-size: 32px;
   text-align: center;
   margin-bottom: 20px;
   border: none;
   border-radius: 8px;
+  font-family: "Qwitcher Grypen", serif;
+  font-weight: 700;
+  font-style: normal;
 `;
 
 // const AddHabitButton = styled.button`
@@ -47,11 +49,11 @@ export const StyledCalendarContainer = styled.div`
 
 export const CalendarButtons = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-content: center;
   flex-wrap: wrap;
   width: 40%;
-  gap: 10px; 
+  gap: 5px; 
   margin: 0 auto; 
   
   button {
@@ -144,12 +146,14 @@ export const StyledCalendar = styled(Calendar)`
 export const ListHeader = styled.div`
   background-color: purple;
   color: white;
-  font-weight: bold;
   font-size: 24px;
   text-align: center;
   margin-bottom: 20px;
   border: none;
   border-radius: 8px;
+  font-family: "Allura", cursive;
+  font-weight: 400;
+  font-style: normal;
 `;
 
 export const HabitsSection = styled.div`

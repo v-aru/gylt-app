@@ -2,13 +2,12 @@ import { HabitCheckbox, HabitDetails, HabitName, HabitItem } from "./HabitListSt
 
 export default function HabitList({ habits, onToggleHabit, onEditHabit }) {
 
-  if (habits.length === 0) {
-    return <p>No habits for this day!</p>;
-  }
-
   return (
     <div>
-      {habits.map((habit) => (
+      {habits.length === 0 ? (
+        <p>No habits for selected day or filter!</p>
+      ) : (
+      habits.map((habit) => (
         <HabitItem key={habit.id} onClick={() => onEditHabit(habit)}>
           <HabitDetails>
             <HabitName>{habit.habitName}</HabitName>
@@ -20,7 +19,8 @@ export default function HabitList({ habits, onToggleHabit, onEditHabit }) {
             onChange={() => onToggleHabit(habit.id)}
           />
         </HabitItem>
-      ))}
+      ))
+    )}
     </div>
   );
 }

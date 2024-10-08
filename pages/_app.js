@@ -5,7 +5,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <div>
       {/* <GlobalFontStyle /> */}
-      <Navigation />
+      {/* <Navigation /> */}
       <Component {...pageProps} />
     </div>
   );
