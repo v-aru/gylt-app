@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { ProfileContainer, ProfileCard, ProfileImage, ProfileDetails, ProfileName, ProfileEmail, SignInOptions, SignInButton, SignOutButton, Icon, UserInfo, EditButton, SaveButton, InputField, LoginButton, EyeButton} from '../styles/ProfileStyles';
+import { ProfileContainer, ProfileCard, ProfileImageWrapper, ProfileImage, ProfileDetails, ProfileName, ProfileEmail, SignInOptions, SignInButton, SignOutButton, Icon, UserInfo, EditButton, SaveButton, InputField, LoginButton, EyeButton} from '../styles/ProfileStyles';
 import { useSession, signIn, signOut } from "next-auth/react";
 import CloseEye from '../public/assets/CloseEye';
 import OpenEye from '../public/assets/OpenEye';
+//import PlaceholderImg from '../public/images/ProfileImg.png';
 
 const ProfilePage = () => {
   const { data: session } = useSession();
   const [isEditing, setIsEditing] = useState(false);
-  const [isSigningIn, setIsSigningIn] = useState(false); // State for handling sign-in form
+  const [isSigningIn, setIsSigningIn] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -16,6 +17,7 @@ const ProfilePage = () => {
   const [gender, setGender] = useState('');
   const [dob, setDob] = useState('');
   const [city, setCity] = useState('');
+  const [username, setUsername] = useState('');
 
   const handleSave = () => {
     setIsEditing(false);
@@ -29,16 +31,26 @@ const ProfilePage = () => {
   return (
     <ProfileContainer>
       <ProfileCard>
-      {session ? (
-          <>
-            <ProfileImage src={session.user.image} alt="Profile Picture" />
-            <ProfileDetails>
+        <ProfileImageWrapper>
+          <ProfileImage 
+              src={"/images/Placeholder.png"} 
+              alt="Profile Picture" 
+            />
+          </ProfileImageWrapper>
+        <ProfileDetails>
+        {session ? (
+            <>
+              <ProfileImage 
+                src={session ? session.user.image : "/images/ProfileImg.svg"} 
+                alt="Profile Picture" 
+              />
               <ProfileName>Welcome, {session.user.name}!</ProfileName>
               <ProfileEmail>{session.user.email}</ProfileEmail>
 
               {!isEditing ? (
                 <>
                   <UserInfo>
+                    <p><strong>Username:</strong> {username || "Not set"}</p>
                     <p><strong>Age:</strong> {age || "Not set"}</p>
                     <p><strong>Gender:</strong> {gender || "Not set"}</p>
                     <p><strong>Date of Birth:</strong> {dob || "Not set"}</p>
@@ -48,6 +60,7 @@ const ProfilePage = () => {
                 </>
               ) : (
                 <>
+                  <InputField type="text" placeholder="Enter username" value={username} onChange={(e) => setUsername(e.target.value)} />
                   <InputField type="number" placeholder="Enter your age" value={age} onChange={(e) => setAge(e.target.value)} />
                   <InputField type="text" placeholder="Enter your gender" value={gender} onChange={(e) => setGender(e.target.value)} />
                   <InputField type="date" placeholder="Enter your date of birth" value={dob} onChange={(e) => setDob(e.target.value)} />
@@ -57,11 +70,9 @@ const ProfilePage = () => {
               )}
 
               <SignOutButton onClick={() => signOut()}>Sign Out</SignOutButton>
-            </ProfileDetails>
-          </>
-        ) : ( 
-          <>
-            <ProfileDetails>
+            </>
+          ) : ( 
+            <>
               <ProfileName>Welcome!</ProfileName>
               {!isSigningIn ? (
                 <form onSubmit={handleSignIn}>
@@ -112,9 +123,9 @@ const ProfilePage = () => {
                   {isSigningIn ? "Back to Email Sign In" : "Use Alternate Sign In"}
                 </SignInButton>
               </SignInOptions>
-            </ProfileDetails>
-          </>
-        )}
+            </>
+          )}
+        </ProfileDetails> 
       </ProfileCard>
     </ProfileContainer>
   );

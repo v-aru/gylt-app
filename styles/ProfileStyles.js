@@ -24,12 +24,23 @@ export const ProfileCard = styled.div`
   }
 `;
 
-export const ProfileImage = styled.img`
+export const ProfileImageWrapper = styled.div`
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  margin-bottom: 20px;
   border: 2px solid #e0e0e0;
+  overflow: hidden;
+  position: relative;
+`;
+
+export const ProfileImage = styled.img`
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  overflow: hidden;
+  transform: scale(1.9); 
+  // transition: transform 0.3s ease;
 `;
 
 export const ProfileDetails = styled.div`
