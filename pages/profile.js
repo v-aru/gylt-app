@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ProfileContainer, ProfileCard, ProfileImage, ProfileDetails, ProfileName, ProfileEmail, SignInOptions, SignInButton, SignOutButton, Icon, UserInfo, EditButton, SaveButton, InputField, LoginButton, EyeButton} from '../src/ProfileStyles';
+import { ProfileContainer, ProfileCard, ProfileImage, ProfileDetails, ProfileName, ProfileEmail, SignInOptions, SignInButton, SignOutButton, Icon, UserInfo, EditButton, SaveButton, InputField, LoginButton, EyeButton} from '../styles/ProfileStyles';
 import { useSession, signIn, signOut } from "next-auth/react";
 import CloseEye from '../public/assets/CloseEye';
 import OpenEye from '../public/assets/OpenEye';
@@ -72,7 +72,7 @@ const ProfilePage = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
-                  <div style={{ position: 'relative' }}>
+                  <div style={{ position: 'relative', width: '100%' }}>
                     <InputField
                       type={showPassword ? "text" : "password"} // Toggle between text and password
                       placeholder="Password"
@@ -87,7 +87,7 @@ const ProfilePage = () => {
                       {showPassword ? <OpenEye /> : <CloseEye />}
                     </EyeButton>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%', position: 'relative', right: '-15px' }}>
                     <LoginButton type="submit">Sign In</LoginButton>
                   </div>
                 </form>

@@ -35,6 +35,10 @@ export const ProfileImage = styled.img`
 export const ProfileDetails = styled.div`
   text-align: center;
   margin-top: 10px;
+  width: 80%;
+  display: flex;
+  align-self: center;
+  flex-direction: column;
 `;
 
 export const ProfileName = styled.h2`
@@ -132,8 +136,10 @@ export const SaveButton = styled.button`
 
 export const InputField = styled.input`
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   margin-top: 10px;
+  position: relative;
+  left: -10px;
   border-radius: 5px;
   border: 1px solid #ddd;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -148,7 +154,7 @@ export const LoginButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 5px;
   padding: 8px 16px;
   background-color: #F5F5F7;
   color: black;
@@ -165,8 +171,9 @@ export const LoginButton = styled.button`
 
 export const EyeButton = styled.button`
   position: absolute;
-  right: -10px;
+  right: -5px;
   top: 60%;
+  padding: 0;
   transform: translateY(-50%);
   background: none;
   border: none;
