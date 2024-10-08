@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ProfileContainer, ProfileCard, ProfileImage, ProfileDetails, ProfileName, ProfileEmail, SignInOptions, SignInButton, SignOutButton, Icon, UserInfo, EditButton, SaveButton, InputField, LoginButton, EyeButton} from './ProfileStyles';
+import { ProfileContainer, ProfileCard, ProfileImage, ProfileDetails, ProfileName, ProfileEmail, SignInOptions, SignInButton, SignOutButton, Icon, UserInfo, EditButton, SaveButton, InputField, LoginButton, EyeButton} from '../src/ProfileStyles';
 import { useSession, signIn, signOut } from "next-auth/react";
 import CloseEye from '../public/assets/CloseEye';
 import OpenEye from '../public/assets/OpenEye';
