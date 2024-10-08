@@ -52,6 +52,12 @@ const Navigation = () => (
         {/* Subscriptions */}
         <Image src="/images/subscriptions.svg" alt="Subscriptions" width={40} height={40} />
       </Link>
+
+      <Link href="/profile">
+        {/* Subscriptions */}
+        <Image src="/images/profileIcon.png" alt="Profile" width={35} height={35} />
+      </Link>
+
     </div>
 
   </Nav>
