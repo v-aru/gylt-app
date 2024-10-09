@@ -4,6 +4,7 @@ import { signIn, signOut } from "next-auth/react";
 import CloseEye from '../public/assets/CloseEye';
 import OpenEye from '../public/assets/OpenEye';
 import SignUpForm from "@/components/Profile/NewAccountSignUp/SignUpForm";
+import Layout from "@/components/Layout/Layout";
 //import PlaceholderImg from '../public/images/ProfileImg.png';
 
 const ProfilePage = ({ session }) => {
@@ -38,6 +39,7 @@ const ProfilePage = ({ session }) => {
   };
 
   return (
+    <Layout>
     <ProfileContainer>
       <ProfileCard>
         <ProfileImageWrapper>
@@ -177,6 +179,7 @@ const ProfilePage = ({ session }) => {
       </ProfileCard>
       <NewAccount> Don&apos;t have an account? &nbsp;<a href="#" onClick={() => setIsSigningUp(true)}>Sign up</a>&nbsp;today!</NewAccount>
     </ProfileContainer>
+    </Layout>
   );
 };
 

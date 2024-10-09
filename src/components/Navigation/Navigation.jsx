@@ -1,66 +1,62 @@
 "use client";
 import Link from 'next/link';
-import styled from 'styled-components';
 import Image from 'next/image';
+import { Nav, NavItem, NavItemsContainer } from './NavigationStyles';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-const Nav = styled.nav`
-  display: flex;
-  position: fixed;
-  left: 0;
-  flex-direction: column;
-  justify-content: space-evenly;
-  height: auto;
-  width: 150px;
-  padding: 20px 0;
-  gap: 50px;
-  background-color: #ddbdfc;
-  border-radius: 0 15px 15px 0;
-  z-index: 1000;
+const Navigation = () => {
+  const router = useRouter();
+  const [isExpanded, setIsExpanded] = useState(false); 
+  
+  const toggleNav = () => {
+    setIsExpanded((prev) => !prev);
+  };
 
-  .nav-items {
-    display: flex;
-    flex-direction: column;
-    gap: 50px;
-  }
+  return (
+    <Nav isExpanded={isExpanded}>
+      <div onClick={toggleNav} style={{ cursor: 'pointer' }}>
+        <Image src="/images/Logo.png" alt="GYLT" width={150} height={50}/>
+      </div>
 
-  a {
-    margin-bottom: 20px; 
-    text-align: center;
-    display: flex;
-    justify-content: center; 
-  }
-`;
+      <NavItemsContainer>
 
-const Navigation = () => (
-  <Nav>
-    <div>
-      <Image src="/images/Logo.png" alt="GYLT" width={150} height={50}/>
-    </div>
+        <NavItem isExpanded={isExpanded} isActive={router.pathname === "/"}>
+          <Link href="/">
+          {/* Dashboard */}
+            <Image src="/images/dashboard.svg" alt="Dashboard" width={35} height={35} />
+            <span>Dashboard</span>
+          </Link>
+        </NavItem>
 
-    <div className='nav-items'>
-      <Link href="/">
-        {/* Dashboard */}
-        <Image src="/images/dashboard.svg" alt="Dashboard" width={35} height={35} />
-      </Link>
+        <NavItem isExpanded={isExpanded} isActive={router.pathname === "/habits"}>
+          <Link href="/habits">
+          {/* Habits */}
+            <Image src="/images/habits.png" alt="Habits" width={35} height={35} />
+            <span>Habits</span>
+          </Link>
+        </NavItem>
 
-      <Link href="/habits">
-        {/* Habits */}
-        <Image src="/images/habits.png" alt="Habits" width={40} height={40} />
-      </Link>
+        <NavItem isExpanded={isExpanded} isActive={router.pathname === "/subscriptions"}>
+          <Link href="/subscriptions">
+          {/* Subscriptions */}
+            <Image src="/images/subscriptions.svg" alt="Subscriptions" width={35} height={35} />
+            <span>Subscriptions</span>
+          </Link>
+        </NavItem>
 
-      <Link href="/subscriptions">
-        {/* Subscriptions */}
-        <Image src="/images/subscriptions.svg" alt="Subscriptions" width={40} height={40} />
-      </Link>
+        <NavItem isExpanded={isExpanded} isActive={router.pathname === "/profile"}>
+          <Link href="/profile">
+          {/* Subscriptions */}
+            <Image src="/images/profileIcon.png" alt="Profile" width={35} height={35} />
+            <span>Profile</span>
+          </Link>
+        </NavItem>
 
-      <Link href="/profile">
-        {/* Subscriptions */}
-        <Image src="/images/profileIcon.png" alt="Profile" width={35} height={35} />
-      </Link>
-
-    </div>
-
-  </Nav>
-);
+      </NavItemsContainer>
+      
+    </Nav>
+  );
+};
 
 export default Navigation;
