@@ -47,7 +47,7 @@ const ProfilePage = ({ session }) => {
             />
           </ProfileImageWrapper>
         <ProfileDetails>
-        {session ? (
+        {session ? ( //User is signed in
             <>
               <ProfileImage 
                 src={session ? session.user.image : "/images/ProfileImg.svg"} 
@@ -81,45 +81,46 @@ const ProfilePage = ({ session }) => {
 
               <SignOutButton onClick={() => signOut()}>Sign Out</SignOutButton>
             </>
-          ) : ( 
+          ) : ( //User is not signed up/signed in
             <>
               <ProfileName>Welcome!</ProfileName>
               {isSigningUp ? (
-                <form onSubmit={handleSignUp}>
-                  <InputField
-                    type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                  />
-                  <InputField
-                    type="email"
-                    placeholder="Email or Username"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                  <div style={{ position: 'relative', width: '100%' }}>
-                    <InputField
-                      type={showPassword ? "text" : "password"} // Toggle between text and password
-                      placeholder="Password"
-                      value={password}  
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                    <EyeButton
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)} // Toggle show/hide
-                    >
-                      {showPassword ? <OpenEye /> : <CloseEye />}
-                    </EyeButton>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%', position: 'relative', right: '-10px' }}>
-                    <LoginButton type="submit">Sign Up</LoginButton>
-                  </div>
-                </form>
-              ) : isSigningIn ? (
+                // <form onSubmit={handleSignUp}>
+                //   <InputField
+                //     type="text"
+                //     placeholder="Username"
+                //     value={username}
+                //     onChange={(e) => setUsername(e.target.value)}
+                //     required
+                //   />
+                //   <InputField
+                //     type="email"
+                //     placeholder="Email or Username"
+                //     value={email}
+                //     onChange={(e) => setEmail(e.target.value)}
+                //     required
+                //   />
+                //   <div style={{ position: 'relative', width: '100%' }}>
+                //     <InputField
+                //       type={showPassword ? "text" : "password"} // Toggle between text and password
+                //       placeholder="Password"
+                //       value={password}  
+                //       onChange={(e) => setPassword(e.target.value)}
+                //       required
+                //     />
+                //     <EyeButton
+                //       type="button"
+                //       onClick={() => setShowPassword(!showPassword)} // Toggle show/hide
+                //     >
+                //       {showPassword ? <OpenEye /> : <CloseEye />}
+                //     </EyeButton>
+                //   </div>
+                //   <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%', position: 'relative', right: '-10px' }}>
+                //     <LoginButton type="submit">Sign Up</LoginButton>
+                //   </div>
+                // </form>
+                <SignUpForm />
+              ) : isSigningIn ? ( //User is not signed in
                 <form onSubmit={handleSignIn}>
                   <InputField
                     type="email"
@@ -147,7 +148,7 @@ const ProfilePage = ({ session }) => {
                     <LoginButton type="submit">Sign In</LoginButton>
                   </div>
                 </form>
-              ) : (
+              ) : ( //User is signing in using an alternate method
                 <>
                 <SignInOptions>
                   <SignInButton onClick={() => signIn("google")}>
@@ -163,13 +164,13 @@ const ProfilePage = ({ session }) => {
                     Sign in with Facebook
                   </SignInButton>
                 </SignInOptions>
-                <SignInOptions>
-                  <SignInButton onClick={() => setIsSigningIn(!isSigningIn)}>
-                    {isSigningIn ? "Use Alternate Sign In" : "Back to Email Sign In"}
-                  </SignInButton>
-                </SignInOptions>
             </>
           )}
+          <SignInOptions>
+            <SignInButton onClick={() => setIsSigningIn(!isSigningIn)}>
+              {isSigningIn ? "Use Alternate Sign In" : "Back to Email Sign In"}
+            </SignInButton>
+          </SignInOptions>
           </>
           )}
         </ProfileDetails> 
