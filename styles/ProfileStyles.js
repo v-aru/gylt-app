@@ -211,3 +211,47 @@ export const NewAccount = styled.div`
     }
   }
 `;
+
+export const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+export const SubmitButton = styled.button`
+  padding: 0.75rem;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: #45a049;
+  }
+`;
+
+export const Message = styled.p`
+  color: red;
+  font-size: 0.9rem;
+`;
+
+export const SelectField = styled.select`
+  // padding: 0.5rem;
+  padding: 10px;
+  margin-top: 10px;
+  position: relative;
+  left: -10px;
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  font-size: 14px;
+  outline: none;
+  width: 108%;
+
+  &:focus {
+    border-color: #66afe9;
+    // border: 1px solid #1d267d;
+    box-shadow: 0 0 5px rgba(102, 175, 233, .5);
+  }
+`;
