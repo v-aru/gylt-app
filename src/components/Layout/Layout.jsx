@@ -2,11 +2,11 @@
 import React from 'react';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
+import Navigation from '../Navigation/Navigation';
 
 const Layout = ({ children }) => {
   return (
     <>
-      {/* No <html> or <head> tags here */}
       <Header />
       <main>
         {children}

@@ -1,6 +1,5 @@
 "use client";
 import styled from "styled-components";
-import Layout from "@/components/Layout/Layout";
 
 const MainContent = styled.div`
   display: flex;
