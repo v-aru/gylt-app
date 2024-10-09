@@ -1,5 +1,5 @@
-// import TitleBar from "@/components/TitleBar/TitleBar.jsx";
-import Navigation  from "../components/Navigation/Navigation";
+import React from "react";
+import Layout from "@/components/Layout/Layout"; 
 
 export const metadata = {
   title: "GYLT App",
@@ -11,12 +11,12 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <title>{metadata.title}</title>
-        <meta name="description" content="metadata.description"></meta>
+        <meta name="description" content={metadata.description} />
       </head>
       <body>
-        {/* <TitleBar/> */}
-        <Navigation /> 
-        {children}
+        <Layout>
+          {children}
+        </Layout>
       </body>
     </html>
   );
