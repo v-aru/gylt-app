@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const ProfileContainer = styled.div`
   display: flex;
   justify-content: center;
+  flex-direction: column;
   align-items: center;
   height: 100vh;
   background-color: #f4f4f4;
@@ -193,4 +194,20 @@ export const EyeButton = styled.button`
   display: flex;
   align-content: center;
   justify-content: center;
+`;
+
+export const NewAccount = styled.div`
+  text-align: center;
+  margin-top: 20px;
+  font-size: 16px;
+
+  a {
+    cursor: pointer;
+    color: #007bff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 `;
