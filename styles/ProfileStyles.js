@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const ProfileContainer = styled.div`
   display: flex;
   justify-content: center;
+  flex-direction: column;
   align-items: center;
   height: 100vh;
   background-color: #f4f4f4;
@@ -24,17 +25,32 @@ export const ProfileCard = styled.div`
   }
 `;
 
-export const ProfileImage = styled.img`
+export const ProfileImageWrapper = styled.div`
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  margin-bottom: 20px;
   border: 2px solid #e0e0e0;
+  overflow: hidden;
+  position: relative;
+`;
+
+export const ProfileImage = styled.img`
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  overflow: hidden;
+  transform: scale(1.9); 
+  // transition: transform 0.3s ease;
 `;
 
 export const ProfileDetails = styled.div`
   text-align: center;
   margin-top: 10px;
+  width: 80%;
+  display: flex;
+  align-self: center;
+  flex-direction: column;
 `;
 
 export const ProfileName = styled.h2`
@@ -132,8 +148,10 @@ export const SaveButton = styled.button`
 
 export const InputField = styled.input`
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   margin-top: 10px;
+  position: relative;
+  left: -10px;
   border-radius: 5px;
   border: 1px solid #ddd;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -148,7 +166,7 @@ export const LoginButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 5px;
   padding: 8px 16px;
   background-color: #F5F5F7;
   color: black;
@@ -165,8 +183,9 @@ export const LoginButton = styled.button`
 
 export const EyeButton = styled.button`
   position: absolute;
-  right: -10px;
+  right: -5px;
   top: 60%;
+  padding: 0;
   transform: translateY(-50%);
   background: none;
   border: none;
@@ -175,4 +194,20 @@ export const EyeButton = styled.button`
   display: flex;
   align-content: center;
   justify-content: center;
+`;
+
+export const NewAccount = styled.div`
+  text-align: center;
+  margin-top: 20px;
+  font-size: 16px;
+
+  a {
+    cursor: pointer;
+    color: #007bff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 `;

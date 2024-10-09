@@ -1,21 +1,26 @@
 import React, { useState } from "react";
-import { ProfileContainer, ProfileCard, ProfileImage, ProfileDetails, ProfileName, ProfileEmail, SignInOptions, SignInButton, SignOutButton, Icon, UserInfo, EditButton, SaveButton, InputField, LoginButton, EyeButton} from '../src/ProfileStyles';
-import { useSession, signIn, signOut } from "next-auth/react";
+import { ProfileContainer, ProfileCard, ProfileImageWrapper, ProfileImage, ProfileDetails, ProfileName, ProfileEmail, SignInOptions, SignInButton, SignOutButton, Icon, UserInfo, EditButton, SaveButton, InputField, LoginButton, EyeButton, NewAccount} from '../styles/ProfileStyles';
+import { signIn, signOut } from "next-auth/react";
 import CloseEye from '../public/assets/CloseEye';
 import OpenEye from '../public/assets/OpenEye';
+import SignUpForm from "@/components/Profile/NewAccountSignUp/SignUpForm";
+//import PlaceholderImg from '../public/images/ProfileImg.png';
 
-const ProfilePage = () => {
-  const { data: session } = useSession();
+const ProfilePage = ({ session }) => {
+  // const { data: session } = useSession();
   const [isEditing, setIsEditing] = useState(false);
-  const [isSigningIn, setIsSigningIn] = useState(false); // State for handling sign-in form
+  const [isSigningIn, setIsSigningIn] = useState(false);
+  const [isSigningUp, setIsSigningUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
 
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
   const [dob, setDob] = useState('');
   const [city, setCity] = useState('');
+  const [username, setUsername] = useState('');
 
   const handleSave = () => {
     setIsEditing(false);
@@ -26,28 +31,46 @@ const ProfilePage = () => {
     signIn("credentials", { email, password });
   };
 
+  const handleSignUp = (e) => {
+    e.preventDefault();
+    // Logic for signing up with email and password
+    // Implement your sign-up API call here
+  };
+
   return (
     <ProfileContainer>
       <ProfileCard>
-      {session ? (
-          <>
-            <ProfileImage src={session.user.image} alt="Profile Picture" />
-            <ProfileDetails>
+        <ProfileImageWrapper>
+          <ProfileImage 
+              src={"/images/Placeholder.png"} 
+              alt="Profile Picture" 
+            />
+          </ProfileImageWrapper>
+        <ProfileDetails>
+        {session ? (
+            <>
+              <ProfileImage 
+                src={session ? session.user.image : "/images/ProfileImg.svg"} 
+                alt="Profile Picture" 
+              />
               <ProfileName>Welcome, {session.user.name}!</ProfileName>
               <ProfileEmail>{session.user.email}</ProfileEmail>
 
               {!isEditing ? (
                 <>
                   <UserInfo>
+                    <p><strong>Username:</strong> {username || "Not set"}</p>
                     <p><strong>Age:</strong> {age || "Not set"}</p>
                     <p><strong>Gender:</strong> {gender || "Not set"}</p>
                     <p><strong>Date of Birth:</strong> {dob || "Not set"}</p>
                     <p><strong>City:</strong> {city || "Not set"}</p>
                   </UserInfo>
+
                   <EditButton onClick={() => setIsEditing(true)}>Edit Profile</EditButton>
                 </>
               ) : (
                 <>
+                  <InputField type="text" placeholder="Enter username" value={username} onChange={(e) => setUsername(e.target.value)} />
                   <InputField type="number" placeholder="Enter your age" value={age} onChange={(e) => setAge(e.target.value)} />
                   <InputField type="text" placeholder="Enter your gender" value={gender} onChange={(e) => setGender(e.target.value)} />
                   <InputField type="date" placeholder="Enter your date of birth" value={dob} onChange={(e) => setDob(e.target.value)} />
@@ -57,14 +80,19 @@ const ProfilePage = () => {
               )}
 
               <SignOutButton onClick={() => signOut()}>Sign Out</SignOutButton>
-            </ProfileDetails>
-          </>
-        ) : ( 
-          <>
-            <ProfileDetails>
+            </>
+          ) : ( 
+            <>
               <ProfileName>Welcome!</ProfileName>
-              {!isSigningIn ? (
-                <form onSubmit={handleSignIn}>
+              {isSigningUp ? (
+                <form onSubmit={handleSignUp}>
+                  <InputField
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                  />
                   <InputField
                     type="email"
                     placeholder="Email or Username"
@@ -72,7 +100,7 @@ const ProfilePage = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
-                  <div style={{ position: 'relative' }}>
+                  <div style={{ position: 'relative', width: '100%' }}>
                     <InputField
                       type={showPassword ? "text" : "password"} // Toggle between text and password
                       placeholder="Password"
@@ -87,11 +115,40 @@ const ProfilePage = () => {
                       {showPassword ? <OpenEye /> : <CloseEye />}
                     </EyeButton>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%', position: 'relative', right: '-10px' }}>
+                    <LoginButton type="submit">Sign Up</LoginButton>
+                  </div>
+                </form>
+              ) : isSigningIn ? (
+                <form onSubmit={handleSignIn}>
+                  <InputField
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                  <div style={{ position: 'relative', width: '100%' }}>
+                    <InputField
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Password"
+                      value={password}  
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                    <EyeButton
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <OpenEye /> : <CloseEye />}
+                    </EyeButton>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%', position: 'relative', right: '-10px' }}>
                     <LoginButton type="submit">Sign In</LoginButton>
                   </div>
                 </form>
               ) : (
+                <>
                 <SignInOptions>
                   <SignInButton onClick={() => signIn("google")}>
                     <Icon src="/images/googleIcon.png" alt="Google icon" />
@@ -106,16 +163,18 @@ const ProfilePage = () => {
                     Sign in with Facebook
                   </SignInButton>
                 </SignInOptions>
-              )}
-              <SignInOptions>
-                <SignInButton onClick={() => setIsSigningIn(!isSigningIn)}>
-                  {isSigningIn ? "Back to Email Sign In" : "Use Alternate Sign In"}
-                </SignInButton>
-              </SignInOptions>
-            </ProfileDetails>
+                <SignInOptions>
+                  <SignInButton onClick={() => setIsSigningIn(!isSigningIn)}>
+                    {isSigningIn ? "Use Alternate Sign In" : "Back to Email Sign In"}
+                  </SignInButton>
+                </SignInOptions>
+            </>
+          )}
           </>
-        )}
+          )}
+        </ProfileDetails> 
       </ProfileCard>
+      <NewAccount> Don&apos;t have an account? &nbsp;<a href="#" onClick={() => setIsSigningUp(true)}>Sign up</a>&nbsp;today!</NewAccount>
     </ProfileContainer>
   );
 };

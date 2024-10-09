@@ -1,5 +1,5 @@
 "use client";
-import '../../../public/globals.css';
+import '../../../styles/globals.css';
 import React, { useState, useEffect } from 'react';
 import { Container, StyledCalendarContainer, StyledCalendar, PageHeader, ListHeader, StyledHabitListSection, CalendarButtons, HabitsSection } from './HabitPageStyles';
 import HabitList from '../../components/Habits/HabitList/HabitList';
