@@ -174,7 +174,7 @@ const ProfilePage = ({ session }) => {
           )}
         </ProfileDetails> 
       </ProfileCard>
-      <NewAccount> Don\'t have an account? &nbsp;<a href="#" onClick={() => setIsSigningUp(true)}>Sign up</a>&nbsp;today!</NewAccount>
+      <NewAccount> Don&apos;t have an account? &nbsp;<a href="#" onClick={() => setIsSigningUp(true)}>Sign up</a>&nbsp;today!</NewAccount>
     </ProfileContainer>
   );
 };
