@@ -1,6 +1,6 @@
 import dbConnect from '@/backend/dbConnect';
 // import Habit from '@/backend/models/Habit'; 
-import Habit from '/src/backend/models/Habit';
+import Habit from '/src/backend/models/Habit.js';
 
 export default async function handler(req, res) {
   await dbConnect();
