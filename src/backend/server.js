@@ -1,22 +1,22 @@
 // backend/index.js
 require('dotenv').config();
-import express, { json } from 'express';
-import cors from 'cors';
+const express = require('express');
+const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
 const PORT = 5002;
 
 app.use(cors({ origin: '*' })); // Allow cross-origin requests
-app.use(json()); // Parse JSON bodies
+app.use(express.json()); // Parse JSON bodies
 
 const uri = 
 
 // Connect to MongoDB
-import { connect } from 'mongoose';
+const mongoose = require('mongoose');
 console.log('MongoDB URI:', uri);
 
-connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log('MongoDB connected');
   })

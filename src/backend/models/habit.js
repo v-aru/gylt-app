@@ -1,6 +1,8 @@
 // backend/models/Habit.js
 import { Schema, model } from 'mongoose';
 import Habit, { find, findByIdAndUpdate, findByIdAndDelete } from './models/Habit';
+import { Router } from 'express';
+const router = Router();
 
 const habitSchema = new Schema({
   habitName: { type: String, required: true },
@@ -16,7 +18,7 @@ const Habit = model('Habit', habitSchema);
 export default Habit;
 
 // Create a new habit
-app.post('/habits', async (req, res) => {
+router.post('/habits', async (req, res) => {
   try {
     console.log('POST /api/habits called:', req.body);
     const habit = new Habit(req.body);
