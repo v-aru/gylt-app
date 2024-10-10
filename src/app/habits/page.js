@@ -20,7 +20,6 @@ export default function HabitsPage() {
   const [date, setDate] = useState(new Date());
   const [randomQuote, setRandomQuote] = useState({});
   const [activeStartDate, setActiveStartDate] = useState(new Date());
-  //const [filteredHabits, setFilteredHabits] = useState([]); 
   const [selectedColor, setSelectedColor] = useState(null); 
   const [selectedColorAllHabits, setSelectedColorAllHabits] = useState(null); 
   const [selectedColorDayHabits, setSelectedColorDayHabits] = useState(null); 
@@ -31,7 +30,7 @@ export default function HabitsPage() {
     setRandomQuote(Quotes[randomIndex]);
   }, []);
 
-  const addHabit = (newHabit) => {
+  const addHabit = async (newHabit) => {
     const habitToAdd = {
       habitName: newHabit.habitName,
       id: Date.now(),
@@ -42,8 +41,28 @@ export default function HabitsPage() {
       completed: false,
       color: newHabit.color || '#000000',
     };
-    setHabits((prevHabits) => [...prevHabits, habitToAdd]);
-    setIsModalOpen(false);
+    // setHabits((prevHabits) => [...prevHabits, habitToAdd]);
+    // setIsModalOpen(false);
+    try {
+      const response = await fetch('http://localhost:5002/habits', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(habitToAdd),
+      });
+
+      console.log("response: ", response);
+      if (!response.ok) {
+        throw new Error('Failed to add habit');
+      }
+  
+      const data = await response.json();
+      setHabits((prevHabits) => [...prevHabits, data]);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error adding habit:', error);
+    }
   };
 
   const editHabit = (updatedHabit) => {
