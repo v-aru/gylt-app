@@ -10,6 +10,7 @@ import Modal from '@/components/Modal/Modal';
 import { CustomColorPicker } from '../../components/ColorPicker/ColorPicker';
 import { Quotes } from '../../../public/positiveQuotes';
 import { QuotesSection } from './QuotesSectionStyles';
+import axios from 'axios';
 
 
 export default function HabitsPage() {
@@ -20,21 +21,30 @@ export default function HabitsPage() {
   const [date, setDate] = useState(new Date());
   const [randomQuote, setRandomQuote] = useState({});
   const [activeStartDate, setActiveStartDate] = useState(new Date());
-  //const [filteredHabits, setFilteredHabits] = useState([]); 
   const [selectedColor, setSelectedColor] = useState(null); 
   const [selectedColorAllHabits, setSelectedColorAllHabits] = useState(null); 
   const [selectedColorDayHabits, setSelectedColorDayHabits] = useState(null); 
+
+  const fetchHabits = async () => {
+    try {
+      const response = await axios.get('/api/habits'); 
+      setHabits(response.data);
+    } catch (error) {
+      console.error('Error fetching habits:', error);
+    }
+  };
 
   useEffect(() => {
     // Pick a random quote when the component renders
     const randomIndex = Math.floor(Math.random() * Quotes.length);
     setRandomQuote(Quotes[randomIndex]);
+    fetchHabits();
   }, []);
 
-  const addHabit = (newHabit) => {
+  const addHabit = async (newHabit) => {
     const habitToAdd = {
       habitName: newHabit.habitName,
-      id: Date.now(),
+      category: newHabit.category,
       days: newHabit.days || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       customDays: newHabit.frequency === 'custom' ? newHabit.customDays : [],
       date: date.toISOString().split('T')[0],
@@ -42,17 +52,55 @@ export default function HabitsPage() {
       completed: false,
       color: newHabit.color || '#000000',
     };
-    setHabits((prevHabits) => [...prevHabits, habitToAdd]);
-    setIsModalOpen(false);
+    try {
+      const response = await fetch('/api/habits', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(habitToAdd),
+      });
+
+      const data = await response.json();
+      setHabits((prevHabits) => [...prevHabits, data]);      
+      if (!response.ok) {
+        throw new Error('Failed to add habit');
+      }
+  
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error adding habit:', error);
+    }
   };
 
-  const editHabit = (updatedHabit) => {
-    setHabits(habits.map(habit => 
-      habit.id === updatedHabit.id ? updatedHabit : habit
-    ));
-    setIsModalOpen(false);
-    setIsEditing(false); // Reset editing state
-    setEditingHabit(null); // Clear the habit being edited
+  const editHabit = async (updatedHabit) => {
+    try {
+      const response = await fetch(`/api/habits/${updatedHabit._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type' : 'application/json'},
+        body: JSON.stringify(updatedHabit),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json(); 
+        console.error('Error updating habit:', errorData);
+        throw new Error ('Failed to update habit!');
+      }
+      
+      const data = await response.json();
+      setHabits((prevHabits) => 
+        prevHabits.map((habit) => 
+          habit._id === updatedHabit._id ? data : habit
+        )
+      );
+
+      await fetchHabits();
+      setIsModalOpen(false);
+      setIsEditing(false);
+      setEditingHabit(null);
+    } catch (error) {
+      console.error('Error editing habit', error);
+    }
   };
 
   const handleEditClick = (habit) => {
@@ -109,7 +157,9 @@ export default function HabitsPage() {
         return selectedMonthDay === lastDayOfMonth;
       }
 
-      if (habit.frequency === 'custom') return habit.customDays.includes(selectedDay);
+      if (habit.frequency === 'custom' && habit.customDays && Array.isArray(habit.customDays)) {
+        return habit.customDays.includes(selectedDay);
+      }
       
       return false;
     });
