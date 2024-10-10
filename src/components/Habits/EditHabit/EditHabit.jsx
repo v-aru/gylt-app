@@ -10,7 +10,6 @@ export default function EditHabit({ habit, onSubmit }) {
     const [customDays, setCustomDays] = useState([]);
 
   useEffect(() => {
-    console.log('Editing habit:', habit);
     if (habit) {
         setHabitName(habit.habitName || '');
         setCategory(habit.category || '');
@@ -33,6 +32,18 @@ export default function EditHabit({ habit, onSubmit }) {
     };
 
     onSubmit(updatedHabit); 
+  };
+
+  const handleCheckboxChange = (day) => {
+    setCustomDays((prevCustomDays) => {
+      if (prevCustomDays.includes(day)) {
+        // Remove the day if it's already selected
+        return prevCustomDays.filter((d) => d !== day);
+      } else {
+        // Add the day if it's not selected
+        return [...prevCustomDays, day];
+      }
+    });
   };
 
   return (
@@ -61,7 +72,7 @@ export default function EditHabit({ habit, onSubmit }) {
         customDays={customDays}
         setCustomDays={setCustomDays}
       />
-
+      
       <CustomColorPicker selectedColor={color} onSelectColor={setColor} />
       
       <Button type="submit">Save Changes</Button>
