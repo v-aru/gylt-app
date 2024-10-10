@@ -5,7 +5,6 @@ import CloseEye from '../public/assets/CloseEye';
 import OpenEye from '../public/assets/OpenEye';
 import SignUpForm from "@/components/Profile/NewAccountSignUp/SignUpForm";
 import Layout from "@/components/Layout/Layout";
-//import PlaceholderImg from '../public/images/ProfileImg.png';
 
 const ProfilePage = ({ session }) => {
   // const { data: session } = useSession();
