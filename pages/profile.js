@@ -3,8 +3,10 @@ import { ProfileContainer, ProfileCard, ProfileImageWrapper, ProfileImage, Profi
 import { signIn, signOut } from "next-auth/react";
 import CloseEye from '../public/assets/CloseEye';
 import OpenEye from '../public/assets/OpenEye';
-import SignUpForm from "@/components/Profile/NewAccountSignUp/SignUpForm";
+import SignUpForm from "@/components/Profile/SignUp/SignUpForm";
 import Layout from "@/components/Layout/Layout";
+import { useRouter } from 'next/router'; 
+import SignInForm from "@/components/Profile/SignIn/SignInForm";
 
 const ProfilePage = ({ session }) => {
   // const { data: session } = useSession();
@@ -14,7 +16,8 @@ const ProfilePage = ({ session }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
+  const router = useRouter(); 
+  const [message, setMessage] = useState('');
 
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
@@ -26,9 +29,20 @@ const ProfilePage = ({ session }) => {
     setIsEditing(false);
   };
 
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
-    signIn("credentials", { email, password });
+    try {
+      const response = await axios.post('/api/signin', {
+        email,
+        password,
+      });
+      localStorage.setItem('token', response.data.token); // Store token
+      setMessage('Sign in successful!');
+      router.push('/'); // Redirect on success
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Something went wrong. Please try again.';
+      setMessage(errorMessage);
+    }
   };
 
   const handleSignUp = (e) => {
@@ -122,33 +136,7 @@ const ProfilePage = ({ session }) => {
                 // </form>
                 <SignUpForm />
               ) : isSigningIn ? ( //User is not signed in
-                <form onSubmit={handleSignIn}>
-                  <InputField
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                  <div style={{ position: 'relative', width: '100%' }}>
-                    <InputField
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Password"
-                      value={password}  
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                    <EyeButton
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <OpenEye /> : <CloseEye />}
-                    </EyeButton>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%', position: 'relative', right: '-10px' }}>
-                    <LoginButton type="submit">Sign In</LoginButton>
-                  </div>
-                </form>
+                <SignInForm />
               ) : ( //User is signing in using an alternate method
                 <>
                 <SignInOptions>
