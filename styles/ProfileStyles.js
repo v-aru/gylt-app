@@ -255,3 +255,14 @@ export const SelectField = styled.select`
     box-shadow: 0 0 5px rgba(102, 175, 233, .5);
   }
 `;
+
+export const SignUpFormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  padding: 20px;
+  box-sizing: border-box;
+  margin-top: 50px; // Add a margin to push the form down
+`;
