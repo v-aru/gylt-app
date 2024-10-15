@@ -95,7 +95,15 @@ export default function HabitsPage() {
       const response = await fetch(`/api/habits/${updatedHabit._id}`, {
         method: 'PUT',
         headers: { 'Content-Type' : 'application/json'},
-        body: JSON.stringify(updatedHabit),
+        body: JSON.stringify({
+          habitName: updatedHabit.habitName,
+          category: updatedHabit.category,
+          days: updatedHabit.days,
+          customDays: updatedHabit.customDays,
+          frequency: updatedHabit.frequency,
+          color: updatedHabit.color,
+          completed: updatedHabit.completed,
+        }),
       });
 
       if (!response.ok) {
@@ -174,10 +182,13 @@ export default function HabitsPage() {
         return selectedMonthDay === lastDayOfMonth;
       }
 
-      if (habit.frequency === 'custom' && habit.customDays && Array.isArray(habit.customDays)) {
-        return habit.customDays.includes(selectedDay);
-      }
-      
+      // if (habit.frequency === 'custom' && habit.customDays && Array.isArray(habit.customDays)) {
+      //   return habit.customDays.includes(selectedDay);
+      // }
+      if (habit.frequency === 'custom' && Array.isArray(habit.days)) {
+        return habit.days.includes(selectedDay); // Check if selectedDay is in the habit's custom days
+    }
+    
       return false;
     });
   };
@@ -188,7 +199,7 @@ export default function HabitsPage() {
 
   const toggleHabit = (id) => {
     setHabits(habits.map((habit) => 
-      habit._|id === id ? { ...habit, completed: !habit.completed } : habit
+      habit._id === id ? { ...habit, completed: !habit.completed } : habit
     ));
   };
 

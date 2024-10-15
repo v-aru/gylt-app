@@ -1,5 +1,6 @@
 import { HabitCheckbox, HabitDetails, HabitName, HabitItem } from "./HabitListStyles";
 
+
 export default function HabitList({ habits, onToggleHabit, onEditHabit }) {
 
   return (
@@ -8,15 +9,15 @@ export default function HabitList({ habits, onToggleHabit, onEditHabit }) {
         <p>No habits for selected day or filter!</p>
       ) : (
       habits.map((habit) => (
-        <HabitItem key={habit.id} onClick={() => onEditHabit(habit)}>
+        <HabitItem key={habit._id} onClick={() => onEditHabit(habit)}>
           <HabitDetails>
-            <HabitName>{habit.habitName}</HabitName>
+            <HabitName completed={habit.completed}>{habit.habitName}</HabitName>
           </HabitDetails>
           <HabitCheckbox
             type="checkbox"
             checked={habit.completed || false} 
             onClick={(e) => e.stopPropagation()} 
-            onChange={() => onToggleHabit(habit.id)}
+            onChange={() => onToggleHabit(habit._id)}
           />
         </HabitItem>
       ))

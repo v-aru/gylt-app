@@ -12,6 +12,8 @@ export const HabitItemContainer = styled.div`
 
 export const HabitName = styled.span`
   font-size: 1.2rem;
+  text-decoration: ${props => (props.completed ? 'line-through' : 'none')};
+  color: ${props => (props.completed ? '#888' : '#000')}; 
 `;
 
 export const HabitCheckbox = styled.input`

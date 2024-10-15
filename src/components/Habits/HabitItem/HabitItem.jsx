@@ -1,15 +1,15 @@
 import { HabitItemContainer, HabitName, HabitCheckbox } from "./HabitItemStyles";
 
 export default function HabitItem({ habit, onToggle }) {
-
+  
   const handleCheckboxChange = (e) => {
     e.stopPropagation();  
-    onToggle(habit.id);  
+    onToggle(habit._id);  
   };
 
   return (
     <HabitItemContainer>
-      <HabitName>{habit.habitName}</HabitName>
+      <HabitName completed={habit.completed}>{habit.habitName}</HabitName>
       <HabitCheckbox 
         type="checkbox" 
         checked={habit.completed} 
