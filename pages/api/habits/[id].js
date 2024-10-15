@@ -45,7 +45,7 @@ export default async function handler(req, res) {
     const { id } = req.query;
 
     switch (method) {
-      case 'GET': // Add GET method for fetching a specific habit
+      case 'GET': 
         try {
           const habit = await Habit.findById(id);
           if (!habit) {
@@ -57,17 +57,27 @@ export default async function handler(req, res) {
         }
         break;
 
-      case 'PUT':
-        try {
-          const updatedHabit = await Habit.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
-          if (!updatedHabit) {
-            return res.status(404).json({ success: false, message: 'Habit not found' });
+        case 'PUT':
+          try {
+            const existingHabit = await Habit.findById(id);
+        
+            if (!existingHabit) {
+              return res.status(404).json({ success: false, message: 'Habit not found' });
+            }
+
+            const updatedData = {
+              ...existingHabit.toObject(),
+              ...req.body,  
+            };
+        
+            const updatedHabit = await Habit.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true });
+            
+            res.status(200).json(updatedHabit);
+          } catch (error) {
+            res.status(400).json({ success: false, error: error.message });
           }
-          res.status(200).json(updatedHabit);
-        } catch (error) {
-          res.status(400).json({ success: false, error: error.message });
-        }
-        break;
+          break;
+        
 
       default:
         res.setHeader('Allow', ['GET', 'PUT']);

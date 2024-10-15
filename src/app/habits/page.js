@@ -188,7 +188,7 @@ export default function HabitsPage() {
 
   const toggleHabit = (id) => {
     setHabits(habits.map((habit) => 
-      habit._|id === id ? { ...habit, completed: !habit.completed } : habit
+      habit._id === id ? { ...habit, completed: !habit.completed } : habit
     ));
   };
 

@@ -4,7 +4,7 @@ export default function HabitItem({ habit, onToggle }) {
 
   const handleCheckboxChange = (e) => {
     e.stopPropagation();  
-    onToggle(habit.id);  
+    onToggle(habit._id);  
   };
 
   return (
