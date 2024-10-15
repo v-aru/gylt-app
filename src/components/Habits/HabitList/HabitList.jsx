@@ -11,7 +11,7 @@ export default function HabitList({ habits, onToggleHabit, onEditHabit }) {
       habits.map((habit) => (
         <HabitItem key={habit._id} onClick={() => onEditHabit(habit)}>
           <HabitDetails>
-            <HabitName>{habit.habitName}</HabitName>
+            <HabitName completed={habit.completed}>{habit.habitName}</HabitName>
           </HabitDetails>
           <HabitCheckbox
             type="checkbox"
