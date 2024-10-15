@@ -8,7 +8,7 @@ export default function HabitList({ habits, onToggleHabit, onEditHabit }) {
         <p>No habits for selected day or filter!</p>
       ) : (
       habits.map((habit) => (
-        <HabitItem key={habit.id} onClick={() => onEditHabit(habit)}>
+        <HabitItem key={habit._id} onClick={() => onEditHabit(habit)}>
           <HabitDetails>
             <HabitName>{habit.habitName}</HabitName>
           </HabitDetails>
