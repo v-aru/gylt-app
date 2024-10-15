@@ -10,6 +10,11 @@ const habitSchema = new Schema({
   date: { type: Date, default: Date.now },
   color: { type: String, default: '#000000' },
   completed: { type: Boolean, default: false },
+  userId: { 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
 });
 
 const Habit = mongoose.models.Habit || mongoose.model('Habit', habitSchema, 'habits-collection');

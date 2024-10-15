@@ -32,6 +32,7 @@ export const ProfileImageWrapper = styled.div`
   border: 2px solid #e0e0e0;
   overflow: hidden;
   position: relative;
+  margin: 0 auto;
 `;
 
 export const ProfileImage = styled.img`
@@ -42,6 +43,7 @@ export const ProfileImage = styled.img`
   overflow: hidden;
   transform: scale(1.9); 
   // transition: transform 0.3s ease;
+  margin: 0 auto;
 `;
 
 export const ProfileDetails = styled.div`

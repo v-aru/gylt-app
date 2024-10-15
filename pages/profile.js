@@ -1,73 +1,93 @@
-import React, { useState } from "react";
-import { ProfileContainer, ProfileCard, ProfileImageWrapper, ProfileImage, ProfileDetails, ProfileName, ProfileEmail, SignInOptions, SignInButton, SignOutButton, Icon, UserInfo, EditButton, SaveButton, InputField, LoginButton, EyeButton, NewAccount} from '../styles/ProfileStyles';
+import React, { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { ProfileContainer, ProfileCard, ProfileImageWrapper, ProfileImage, ProfileDetails, ProfileName, ProfileEmail, SignInOptions, SignInButton, SignOutButton, Icon, UserInfo, EditButton, SaveButton, InputField, NewAccount} from '../styles/ProfileStyles';
 import { signIn, signOut } from "next-auth/react";
-import CloseEye from '../public/assets/CloseEye';
-import OpenEye from '../public/assets/OpenEye';
 import SignUpForm from "@/components/Profile/SignUp/SignUpForm";
 import Layout from "@/components/Layout/Layout";
 import { useRouter } from 'next/router'; 
 import SignInForm from "@/components/Profile/SignIn/SignInForm";
+import useLocalStorageState from 'use-local-storage-state';
 
-const ProfilePage = ({ session }) => {
-  // const { data: session } = useSession();
+const ProfilePage = ( ) => {
+  const { data: session } = useSession();
   const [isEditing, setIsEditing] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [isSigningUp, setIsSigningUp] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter(); 
-  const [message, setMessage] = useState('');
 
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
   const [dob, setDob] = useState('');
   const [city, setCity] = useState('');
   const [username, setUsername] = useState('');
+  const [profileImage, setProfileImage] = useLocalStorageState("profileImage", {
+    defaultValue: "/images/ProfileImg.svg", 
+  });
 
-  const handleSave = () => {
-    setIsEditing(false);
-  };
-
-  const handleSignIn = async (e) => {
-    e.preventDefault();
+  const handleSave = async () => {
+    const userProfileData = { username, age, gender, dob, city };
+  
     try {
-      const response = await axios.post('/api/signin', {
-        email,
-        password,
+      const response = await fetch('/api/updateProfile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userProfileData),
       });
-      localStorage.setItem('token', response.data.token); // Store token
-      setMessage('Sign in successful!');
-      router.push('/'); // Redirect on success
+  
+      if (response.ok) {
+        setIsEditing(false);
+      } else {
+        console.error('Error updating profile');
+      }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Something went wrong. Please try again.';
-      setMessage(errorMessage);
+      console.error('Error saving user info:', error);
     }
   };
 
-  const handleSignUp = (e) => {
-    e.preventDefault();
-    // Logic for signing up with email and password
-    // Implement your sign-up API call here
-  };
+  useEffect(() => {
+    if (session?.user?.image) {
+      setProfileImage(session.user.image); 
+    }
+
+    if (!session) return;
+
+    const fetchUserProfile = async () => {
+      try {
+        const response = await fetch('/api/getProfile');
+        const data = await response.json();
+  
+        if (response.ok) {
+          setUsername(data.username);
+          setAge(data.age);
+          setGender(data.gender);
+          setDob(data.dob);
+          setCity(data.city);
+        } else {
+          console.error('Error fetching user profile');
+        }
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
+    };
+  
+    fetchUserProfile();
+  }, [session, setProfileImage]);
 
   return (
     <Layout>
     <ProfileContainer>
       <ProfileCard>
-        <ProfileImageWrapper>
-          <ProfileImage 
-              src={"/images/Placeholder.png"} 
-              alt="Profile Picture" 
-            />
-          </ProfileImageWrapper>
         <ProfileDetails>
         {session ? ( //User is signed in
             <>
+            <ProfileImageWrapper>
               <ProfileImage 
-                src={session ? session.user.image : "/images/ProfileImg.svg"} 
+                src={profileImage} 
                 alt="Profile Picture" 
+                width="100%"
+                height="100%"
               />
+              </ProfileImageWrapper>
               <ProfileName>Welcome, {session.user.name}!</ProfileName>
               <ProfileEmail>{session.user.email}</ProfileEmail>
 
@@ -100,40 +120,6 @@ const ProfilePage = ({ session }) => {
             <>
               <ProfileName>Welcome!</ProfileName>
               {isSigningUp ? (
-                // <form onSubmit={handleSignUp}>
-                //   <InputField
-                //     type="text"
-                //     placeholder="Username"
-                //     value={username}
-                //     onChange={(e) => setUsername(e.target.value)}
-                //     required
-                //   />
-                //   <InputField
-                //     type="email"
-                //     placeholder="Email or Username"
-                //     value={email}
-                //     onChange={(e) => setEmail(e.target.value)}
-                //     required
-                //   />
-                //   <div style={{ position: 'relative', width: '100%' }}>
-                //     <InputField
-                //       type={showPassword ? "text" : "password"} // Toggle between text and password
-                //       placeholder="Password"
-                //       value={password}  
-                //       onChange={(e) => setPassword(e.target.value)}
-                //       required
-                //     />
-                //     <EyeButton
-                //       type="button"
-                //       onClick={() => setShowPassword(!showPassword)} // Toggle show/hide
-                //     >
-                //       {showPassword ? <OpenEye /> : <CloseEye />}
-                //     </EyeButton>
-                //   </div>
-                //   <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%', position: 'relative', right: '-10px' }}>
-                //     <LoginButton type="submit">Sign Up</LoginButton>
-                //   </div>
-                // </form>
                 <SignUpForm />
               ) : isSigningIn ? ( //User is not signed in
                 <SignInForm />
