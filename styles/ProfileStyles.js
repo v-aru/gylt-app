@@ -138,6 +138,12 @@ export const EditButton = styled.button`
   margin-right: 5px;
 `;
 
+export const SaveBackButtonsContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+`;
+
 export const SaveButton = styled.button`
   background-color: #4caf50;
   color: white;
@@ -145,7 +151,14 @@ export const SaveButton = styled.button`
   padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 20px;
+`;
+export const ExitEditingButton = styled.button`
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
 `;
 
 export const InputField = styled.input`

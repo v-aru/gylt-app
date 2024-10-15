@@ -69,13 +69,13 @@ export default NextAuth({
       if (user) {
         const dbUser = await User.findOne({ email: user.email });
         token.id = dbUser.id;
+        token.email = dbUser.email;
       }
       return token;
     },
     async session({ session, token }) {
       session.user.id = token.id;
       session.user.email = token.email;
-      session.user.firstName = token.firstName;
       return session;
     },
     async signIn({ user, account, profile }) {
@@ -91,6 +91,9 @@ export default NextAuth({
             username: user.name,
             profileImage: user.image, 
             oauthProvider: account.provider, 
+            age: user.age ? user.age : undefined,
+            dateOfBirth: user.dateOfBirth ? user.dateOfBirth : undefined,
+            gender: user.gender ? user.gender : undefined,
           });
           await newUser.save();
         }

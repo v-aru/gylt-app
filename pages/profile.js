@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { ProfileContainer, ProfileCard, ProfileImageWrapper, ProfileImage, ProfileDetails, ProfileName, ProfileEmail, SignInOptions, SignInButton, SignOutButton, Icon, UserInfo, EditButton, SaveButton, InputField, NewAccount} from '../styles/ProfileStyles';
+import { ProfileContainer, ProfileCard, ProfileImageWrapper, ProfileImage, ProfileDetails, ProfileName, ProfileEmail, SignInOptions, SignInButton, SignOutButton, Icon, UserInfo, EditButton, SaveButton, ExitEditingButton, SaveBackButtonsContainer, InputField, NewAccount} from '../styles/ProfileStyles';
 import { signIn, signOut } from "next-auth/react";
 import SignUpForm from "@/components/Profile/SignUp/SignUpForm";
 import Layout from "@/components/Layout/Layout";
@@ -17,7 +17,7 @@ const ProfilePage = ( ) => {
 
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
-  const [dob, setDob] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
   const [city, setCity] = useState('');
   const [username, setUsername] = useState('');
   const [profileImage, setProfileImage] = useLocalStorageState("profileImage", {
@@ -25,12 +25,13 @@ const ProfilePage = ( ) => {
   });
 
   const handleSave = async () => {
-    const userProfileData = { username, age, gender, dob, city };
+    const userProfileData = { username, age, gender, dateOfBirth, city };
+    const token = session?.user?.token;
   
     try {
       const response = await fetch('/api/updateProfile', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' , 'Authorization': `Bearer ${token}`},
         body: JSON.stringify(userProfileData),
       });
   
@@ -53,14 +54,14 @@ const ProfilePage = ( ) => {
 
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch('/api/getProfile');
+        const response = await fetch(`/api/getProfile?userId=${session.user.id}`);
         const data = await response.json();
   
         if (response.ok) {
           setUsername(data.username);
           setAge(data.age);
           setGender(data.gender);
-          setDob(data.dob);
+          setDateOfBirth(data.dateOfBirth);
           setCity(data.city);
         } else {
           console.error('Error fetching user profile');
@@ -72,6 +73,10 @@ const ProfilePage = ( ) => {
   
     fetchUserProfile();
   }, [session, setProfileImage]);
+
+  const exitEditing = () => {
+    setIsEditing(false);
+  };
 
   return (
     <Layout>
@@ -97,7 +102,7 @@ const ProfilePage = ( ) => {
                     <p><strong>Username:</strong> {username || "Not set"}</p>
                     <p><strong>Age:</strong> {age || "Not set"}</p>
                     <p><strong>Gender:</strong> {gender || "Not set"}</p>
-                    <p><strong>Date of Birth:</strong> {dob || "Not set"}</p>
+                    <p><strong>Date of Birth:</strong> {dateOfBirth || "Not set"}</p>
                     <p><strong>City:</strong> {city || "Not set"}</p>
                   </UserInfo>
 
@@ -108,9 +113,12 @@ const ProfilePage = ( ) => {
                   <InputField type="text" placeholder="Enter username" value={username} onChange={(e) => setUsername(e.target.value)} />
                   <InputField type="number" placeholder="Enter your age" value={age} onChange={(e) => setAge(e.target.value)} />
                   <InputField type="text" placeholder="Enter your gender" value={gender} onChange={(e) => setGender(e.target.value)} />
-                  <InputField type="date" placeholder="Enter your date of birth" value={dob} onChange={(e) => setDob(e.target.value)} />
+                  <InputField type="date" placeholder="Enter your date of birth" value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} />
                   <InputField type="text" placeholder="Enter your city" value={city} onChange={(e) => setCity(e.target.value)} />
-                  <SaveButton onClick={handleSave}>Save</SaveButton>
+                  <SaveBackButtonsContainer>
+                    <SaveButton onClick={handleSave}>Save</SaveButton>
+                    <ExitEditingButton ExitEditingButton onClick={exitEditing}>Back</ExitEditingButton>
+                  </SaveBackButtonsContainer>
                 </>
               )}
 

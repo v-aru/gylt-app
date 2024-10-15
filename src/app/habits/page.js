@@ -26,6 +26,7 @@ export default function HabitsPage() {
   const [selectedColor, setSelectedColor] = useState(null); 
   const [selectedColorAllHabits, setSelectedColorAllHabits] = useState(null); 
   const [selectedColorDayHabits, setSelectedColorDayHabits] = useState(null); 
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchUserHabits = async () => {
     if (!session) {
@@ -33,7 +34,9 @@ export default function HabitsPage() {
       return;
     }
     try {
-      const response = await axios.get(`/api/habits?userId=${session.user.id}`);
+      const response = await axios.get(`/api/habits`, {
+          params: { userId: session ? session.user.id : undefined }
+      });
       setHabits(response.data);
     } catch (error) {
       console.error('Error fetching habits:', error);
@@ -42,10 +45,15 @@ export default function HabitsPage() {
 
   useEffect(() => {
     // Pick a random quote when the component renders
-
     const randomIndex = Math.floor(Math.random() * Quotes.length);
     setRandomQuote(Quotes[randomIndex]);
-    fetchUserHabits();
+    const fetchHabits = async () => {
+      if (session) {
+        await fetchUserHabits();
+      }
+      setIsLoading(false);
+    };
+    fetchHabits();
   }, [session, status]);
 
   const addHabit = async (newHabit) => {
@@ -180,7 +188,7 @@ export default function HabitsPage() {
 
   const toggleHabit = (id) => {
     setHabits(habits.map((habit) => 
-      habit.id === id ? { ...habit, completed: !habit.completed } : habit
+      habit._|id === id ? { ...habit, completed: !habit.completed } : habit
     ));
   };
 
