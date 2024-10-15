@@ -23,7 +23,7 @@ export default async function handler(req, res) {
       password,
       firstName,
       lastName,
-      dateOfBirth: dob,
+      dateOfBirth,
       gender,
       location,
       age

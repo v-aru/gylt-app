@@ -7,9 +7,12 @@ const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   oauthProvider: { type: String, required: false }, 
   dateOfBirth: { type: String, required: false },
+  gender: { type: String, required : false },
+  city: { type : String, required: false },
   date: { type: Date, default: Date.now },
   profileImage: { type: String, required: false },
-}, {timestamps: true });
+  age: { type: Number, required: false },
+});
 
 
 // userSchema.pre('save', async function (next) {

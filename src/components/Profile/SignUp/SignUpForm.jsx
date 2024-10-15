@@ -5,7 +5,7 @@ import { Form, InputField, SubmitButton, Message, SelectField, SignUpFormContain
 const SignUpForm = ({ isSignUp }) => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [dob, setDob] = useState('');
+    const [dateOfBirth, setDateOfBirth] = useState('');
     const [age, setAge] = useState('');
     const [gender, setGender] = useState('');
     const [email, setEmail] = useState('');
@@ -15,8 +15,8 @@ const SignUpForm = ({ isSignUp }) => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState('');
 
-    const calculateAge = (dob) => {
-        const birthDate = new Date(dob);
+    const calculateAge = (dateOfBirth) => {
+        const birthDate = new Date(dateOfBirth);
         const ageDiff = Date.now() - birthDate.getTime();
         const ageDate = new Date(ageDiff);
         return Math.abs(ageDate.getUTCFullYear() - 1970);
@@ -32,14 +32,14 @@ const SignUpForm = ({ isSignUp }) => {
         }
 
         // Calculate age from date of birth
-        const calculatedAge = calculateAge(dob);
+        const calculatedAge = calculateAge(dateOfBirth);
         setAge(calculatedAge);
 
         try {
             const response = await axios.post('/api/signup', {
                 firstName,
                 lastName,
-                dob,
+                dateOfBirth,
                 age: calculatedAge, 
                 gender,
                 email,
@@ -73,8 +73,8 @@ const SignUpForm = ({ isSignUp }) => {
                 <InputField
                     type="date"
                     placeholder="Date of Birth*"
-                    value={dob}
-                    onChange={(e) => setDob(e.target.value)}
+                    value={dateOfBirth}
+                    onChange={(e) => setDateOfBirth(e.target.value)}
                     required
                     style={{color: '#5c677d' }}
                 />

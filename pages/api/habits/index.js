@@ -15,7 +15,19 @@ export default async function handler(req, res) {
     case 'GET': 
       try {
         const { userId } = req.query;
-        const habits = await Habit.find({ userId: userId }); // Get all habits
+        let habits;
+        if (userId) {
+          // Fetch habits tied to the user
+          habits = await Habit.find({ userId: userId });
+        } else {
+          // Fetch habits not tied to any user
+          habits = await Habit.find({ userId: null });
+        }
+        
+        if (habits.length === 0) {
+          return res.status(404).json({ message: 'No habits found' });
+        }
+
         res.status(200).json(habits);
       } catch (error) {
         res.status(500).json({ message: error.message });
@@ -24,13 +36,13 @@ export default async function handler(req, res) {
     
       case 'POST':
         try {
-          const userId = token.sub;
+          const userId = token ? token.sub : null;
           const habit = new Habit({
             ...req.body,
-            user: userId,
+            userId: userId,
           });
-          await habit.save();
-          //res.status(201).json(savedHabit);
+          const savedHabit = await habit.save();
+          res.status(201).json(savedHabit);
         } catch (error) {
           res.status(500).json({ message: error.message });
         }

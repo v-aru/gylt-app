@@ -19,7 +19,7 @@ export default async function handler(req, res) {
         username: user.username,
         age: user.age,
         gender: user.gender,
-        dob: user.dob,
+        dateOfBirth: user.dateOfBirth,
         city: user.city,
       });
     } catch (error) {

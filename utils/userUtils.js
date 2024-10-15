@@ -15,6 +15,9 @@ export const findOrCreateUser = async (userData) => {
       email: userData.email,
       image: userData.image, 
       userId: userData.userId,
+      gender: userData.gender,
+      dateOfBirth: userData.dateofBirth,
+      city: userData.city,
     });
 
     await newUser.save();
