@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     }
 
     const token = jwt.sign({ userId: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    console.log('Generated JWT Token:', token);
+    // console.log('Generated JWT Token:', token);
     return res.status(200).json({ token });
 
     //res.status(200).json({ token });

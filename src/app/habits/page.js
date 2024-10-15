@@ -1,6 +1,7 @@
 "use client";
 import '../../../styles/globals.css';
 import React, { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { Container, StyledCalendarContainer, StyledCalendar, PageHeader, ListHeader, StyledHabitListSection, CalendarButtons, HabitsSection } from './HabitPageStyles';
 import HabitList from '../../components/Habits/HabitList/HabitList';
 import AddHabitButton from '@/components/Habits/CreateHabit/AddHabitButton';
@@ -14,6 +15,7 @@ import axios from 'axios';
 
 
 export default function HabitsPage() {
+  const { data: session, status } = useSession();
   const [habits, setHabits] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -25,9 +27,13 @@ export default function HabitsPage() {
   const [selectedColorAllHabits, setSelectedColorAllHabits] = useState(null); 
   const [selectedColorDayHabits, setSelectedColorDayHabits] = useState(null); 
 
-  const fetchHabits = async () => {
+  const fetchUserHabits = async () => {
+    if (!session) {
+      console.error('User is not authenticated');
+      return;
+    }
     try {
-      const response = await axios.get('/api/habits'); 
+      const response = await axios.get(`/api/habits?userId=${session.user.id}`);
       setHabits(response.data);
     } catch (error) {
       console.error('Error fetching habits:', error);
@@ -36,10 +42,11 @@ export default function HabitsPage() {
 
   useEffect(() => {
     // Pick a random quote when the component renders
+
     const randomIndex = Math.floor(Math.random() * Quotes.length);
     setRandomQuote(Quotes[randomIndex]);
-    fetchHabits();
-  }, []);
+    fetchUserHabits();
+  }, [session, status]);
 
   const addHabit = async (newHabit) => {
     const habitToAdd = {
@@ -51,12 +58,14 @@ export default function HabitsPage() {
       frequency: newHabit.frequency || 'Daily',
       completed: false,
       color: newHabit.color || '#000000',
+      userId: session ? session.user.id : null,
     };
     try {
       const response = await fetch('/api/habits', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.user.token}`,
         },
         body: JSON.stringify(habitToAdd),
       });
@@ -94,7 +103,7 @@ export default function HabitsPage() {
         )
       );
 
-      await fetchHabits();
+      await fetchUserHabits();
       setIsModalOpen(false);
       setIsEditing(false);
       setEditingHabit(null);
@@ -104,9 +113,9 @@ export default function HabitsPage() {
   };
 
   const handleEditClick = (habit) => {
-    setEditingHabit(habit); // Set the habit to be edited
-    setIsEditing(true); // Set editing mode
-    setIsModalOpen(true); // Open the modal
+    setEditingHabit(habit);
+    setIsEditing(true); 
+    setIsModalOpen(true); 
   };
 
 

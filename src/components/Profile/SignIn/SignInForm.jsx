@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { EyeButton, InputField, LoginButton } from '../../../../styles/ProfileStyles';
 import CloseEye from '../../../../public/assets/CloseEye';
 import OpenEye from '../../../../public/assets/OpenEye';
+import { signIn } from 'next-auth/react';
 
 const SignInForm = () => {
     const [email, setEmail] = useState('');
@@ -16,7 +17,7 @@ const SignInForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/api/signin', {
+            const response = await axios.post('/api/signin', {
                 email,
                 password, 
             },
