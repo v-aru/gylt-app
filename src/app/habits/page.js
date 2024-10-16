@@ -33,13 +33,17 @@ export default function HabitsPage() {
       console.error('User is not authenticated');
       return;
     }
+    setIsLoading(true);
     try {
       const response = await axios.get(`/api/habits`, {
           params: { userId: session ? session.user.id : undefined }
       });
+      
       setHabits(response.data);
     } catch (error) {
       console.error('Error fetching habits:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -162,6 +166,7 @@ export default function HabitsPage() {
 
   const getHabitsForDate = (selectedDate) => {
     const selectedDay = selectedDate.toLocaleDateString('en-us', { weekday: 'short' });
+    console.log(selectedDay);
     const selectedMonthDay = selectedDate.getDate();
     const selectedDayIndex = selectedDate.getDay();
     const currentMonth = selectedDate.getMonth();
@@ -195,13 +200,49 @@ export default function HabitsPage() {
 
   const selectedHabits = getHabitsForDate(date);
 
-  const filteredHabits = selectedColor ? selectedHabits.filter(habit => habit.color === selectedColor) : selectedHabits;
+  const filteredAllHabits = selectedColorAllHabits ? habits.filter(habit => habit.color === selectedColorAllHabits) : habits;
 
-  const toggleHabit = (id) => {
-    setHabits(habits.map((habit) => 
-      habit._id === id ? { ...habit, completed: !habit.completed } : habit
-    ));
+  const filteredDayHabits = selectedColorDayHabits ? selectedHabits.filter(habit => habit.color === selectedColorDayHabits) : selectedHabits;
+
+  // const toggleHabit = async (updatedHabit) => {
+  //   try {
+  //     // Update the habit status in the database
+  //     await axios.put(`/api/habits/${updatedHabit._id}`, updatedHabit);
+      
+  //     // Update local state to reflect changes
+  //     setHabits((prevHabits) =>
+  //       prevHabits.map((habit) =>
+  //         habit._id === updatedHabit._id ? updatedHabit : habit
+  //       )
+  //     );
+  //   } catch (error) {
+  //     console.error('Error updating habit status:', error);
+  //   }
+  // };
+
+  const toggleHabit = async (habitId) => {
+    const today = new Date().toISOString().split('T')[0]; 
+  
+    setHabits((prevHabits) =>
+      prevHabits.map((habit) =>
+        habit._id === habitId
+          ? {
+            ...habit,
+            completedDates: habit.completedDates.includes(today)
+              ? habit.completedDates.filter((date) => date !== today)
+              : [...habit.completedDates, today], 
+          }
+          : habit
+      )
+    );
+    try {
+      const updatedHabit = habits.find(habit => habit._id === habitId);
+      await axios.put(`/api/habits/${habitId}`, updatedHabit);
+    } catch (error) {
+      console.error('Error updating habit in database:', error);
+    }
   };
+  
 
   return (
     <>
@@ -239,7 +280,7 @@ export default function HabitsPage() {
             <div>
               <CustomColorPicker selectedColor={selectedColorAllHabits} onSelectColor={setSelectedColorAllHabits} />
             </div>
-            <HabitList habits={habits} onToggleHabit={toggleHabit} onEditHabit={handleEditClick} />
+            <HabitList habits={filteredAllHabits} onToggleHabit={toggleHabit} onEditHabit={handleEditClick} />
           </StyledHabitListSection>
         
          <StyledHabitListSection>
@@ -247,7 +288,7 @@ export default function HabitsPage() {
             <div>
               <CustomColorPicker selectedColor={selectedColorDayHabits} onSelectColor={setSelectedColorDayHabits} />
             </div>
-            <HabitList habits={filteredHabits} onToggleHabit={toggleHabit} onEditHabit={handleEditClick} />
+            <HabitList habits={filteredDayHabits} onToggleHabit={toggleHabit} onEditHabit={handleEditClick} />
           </StyledHabitListSection>
       </HabitsSection>
 

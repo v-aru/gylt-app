@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { Nav, NavItem, NavItemsContainer } from './NavigationStyles';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Menu from '../../../public/assets/Menu';
 
 const Navigation = () => {
   const router = useRouter();
@@ -15,8 +16,16 @@ const Navigation = () => {
 
   return (
     <Nav isExpanded={isExpanded}>
-      <div onClick={toggleNav} style={{ cursor: 'pointer' }}>
-        <Image src="/images/Logo.png" alt="GYLT" width={150} height={50}/>
+      <div 
+        style={{ 
+          display: 'flex', 
+          justifyContent: 'center', // Centers horizontally
+          alignItems: 'center', // Centers vertically
+          cursor: 'pointer' 
+        }}
+        onClick={toggleNav}
+      >
+        <Menu/>
       </div>
 
       <NavItemsContainer>
