@@ -37,7 +37,7 @@ export default function SubscriptionPage() {
       <Navigation /> {/* Include the navigation component */}
       <SubscriptionContainer>
         <Title>Subscription Feature</Title>
-        <Message>We're working hard to bring you exciting new features!</Message>
+        <Message>We&apos;re working hard to bring you exciting new features!</Message>
         <ComingSoonTag>Coming Soon in 2025 🚀</ComingSoonTag>
       </SubscriptionContainer>
       <Footer/>
