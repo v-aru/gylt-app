@@ -70,7 +70,7 @@ export default async function handler(req, res) {
               ...req.body,  
             };
         
-            const updatedHabit = await Habit.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true });
+            const updatedHabit = await Habit.findByIdAndUpdate(id, updatedData, { new: true });
             
             res.status(200).json(updatedHabit);
           } catch (error) {

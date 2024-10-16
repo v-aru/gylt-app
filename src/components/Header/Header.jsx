@@ -1,27 +1,33 @@
-// src/components/Header/Header.jsx
 "use client";
 import React from 'react';
 import Navigation from '../Navigation/Navigation'; 
 import styled from 'styled-components';
+import Logo from '../../../public/assets/Logo';
+
 
 const HeaderContainer = styled.header`
   background-color: #1d267d;
   color: white;
-  padding: 20px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
-  h1 {
-    margin: 0;
-    font-size: 2rem;
-  }
+const Title = styled.h1`
+  margin: 0;
+  font-size: 2rem;
 `;
 
 const Header = () => {
   return (
+    <>
+    <Navigation />
     <HeaderContainer>
-      <h1>GYLT App</h1>
-      <Navigation />
+      <Logo alt="GYLT Logo"/>
+      {/* <Title>GYLT App</Title> */}
     </HeaderContainer>
+    </>
   );
 };
 

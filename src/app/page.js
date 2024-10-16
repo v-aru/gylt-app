@@ -1,9 +1,11 @@
 "use client";
 import styled from "styled-components";
+import Dashboard from "@/components/Dashboard/Dashboard"; 
+import { HabitsProvider } from "@/context/HabitsContext";
 
 const MainContent = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
   flex-direction: column;
@@ -43,9 +45,11 @@ const MainContent = styled.div`
 export default function Home() {
   return (
     <MainContent>
-      <h1>Welcome to GYLT</h1>
-      <p>Manage your life with habits, health tracking, to-dos, and more.</p>
-      <button onClick={() => alert("Sign Up or Log In!")}>Get Started</button>
+      <h1>Your Dashboard</h1>
+      <p>Track your habits and stay aligned with your goals.</p>
+      <HabitsProvider>
+        <Dashboard /> {/* Render the Dashboard component here */}
+      </HabitsProvider>
     </MainContent>
   );
 }

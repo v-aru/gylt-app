@@ -3,6 +3,13 @@ import { HabitCheckbox, HabitDetails, HabitName, HabitItem } from "./HabitListSt
 
 export default function HabitList({ habits, onToggleHabit, onEditHabit }) {
 
+  // const handleCheckboxChange = (habit) => {
+  //   const updatedHabit = { ...habit, completed: !habit.completed }; // Toggle completed status
+  //   onToggleHabit(updatedHabit); // Use the parent function to update the habit status
+  // };
+
+  const today = new Date().toISOString().split('T')[0];
+
   return (
     <div>
       {habits.length === 0 ? (
@@ -11,11 +18,11 @@ export default function HabitList({ habits, onToggleHabit, onEditHabit }) {
       habits.map((habit) => (
         <HabitItem key={habit._id} onClick={() => onEditHabit(habit)}>
           <HabitDetails>
-            <HabitName completed={habit.completed}>{habit.habitName}</HabitName>
+            <HabitName completed={habit.completedDates?.includes(today)}>{habit.habitName}</HabitName>
           </HabitDetails>
           <HabitCheckbox
             type="checkbox"
-            checked={habit.completed || false} 
+            checked={habit.completedDates.includes(today)} 
             onClick={(e) => e.stopPropagation()} 
             onChange={() => onToggleHabit(habit._id)}
           />
