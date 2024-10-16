@@ -181,7 +181,7 @@ export default function HabitsPage() {
       if (habitStartDate > selectedDateValue) {
         return false;
       }
-      
+
       if (habit.frequency === 'daily') {
         return true;
       }
@@ -211,47 +211,35 @@ export default function HabitsPage() {
 
   const filteredDayHabits = selectedColorDayHabits ? selectedHabits.filter(habit => habit.color === selectedColorDayHabits) : selectedHabits;
 
-  
-
-  // const toggleHabit = async (updatedHabit) => {
-  //   try {
-  //     // Update the habit status in the database
-  //     await axios.put(`/api/habits/${updatedHabit._id}`, updatedHabit);
-      
-  //     // Update local state to reflect changes
-  //     setHabits((prevHabits) =>
-  //       prevHabits.map((habit) =>
-  //         habit._id === updatedHabit._id ? updatedHabit : habit
-  //       )
-  //     );
-  //   } catch (error) {
-  //     console.error('Error updating habit status:', error);
-  //   }
-  // };
-
   const toggleHabit = async (habitId) => {
     const today = new Date().toISOString().split('T')[0]; 
-  
     setHabits((prevHabits) =>
-      prevHabits.map((habit) =>
-        habit._id === habitId
-          ? {
-            ...habit,
-            completedDates: habit.completedDates.includes(today)
-              ? habit.completedDates.filter((date) => date !== today)
-              : [...habit.completedDates, today], 
-          }
-          : habit
-      )
+        prevHabits.map((habit) => {
+            if (habit._id === habitId) {
+                const isCompleted = habit.completedDates.includes(today);
+                return {
+                    ...habit,
+                    completedDates: isCompleted
+                        ? habit.completedDates.filter((date) => date !== today)
+                        : [...habit.completedDates, today],
+                    completed: !isCompleted,  // Update completed field directly
+                };
+            }
+            return habit;
+        })
     );
+
     try {
-      const updatedHabit = habits.find(habit => habit._id === habitId);
-      await axios.put(`/api/habits/${habitId}`, updatedHabit);
+        const updatedHabit = habits.find(habit => habit._id === habitId);
+        await axios.put(`/api/habits/${habitId}`, {
+            completedDates: updatedHabit.completedDates,
+            completed: !updatedHabit.completed, // Send the updated completed state
+        });
+
     } catch (error) {
-      console.error('Error updating habit in database:', error);
+        console.error('Error updating habit in database:', error);
     }
-  };
-  
+};
 
   return (
     <>
