@@ -166,7 +166,6 @@ export default function HabitsPage() {
 
   const getHabitsForDate = (selectedDate) => {
     const selectedDay = selectedDate.toLocaleDateString('en-us', { weekday: 'short' });
-    console.log(selectedDay);
     const selectedMonthDay = selectedDate.getDate();
     const selectedDayIndex = selectedDate.getDay();
     const currentMonth = selectedDate.getMonth();
@@ -175,6 +174,14 @@ export default function HabitsPage() {
     const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0).getDate(); 
 
     return habits.filter((habit) => {
+
+      const habitStartDate = new Date(habit.startDate).setHours(0, 0, 0, 0);
+      const selectedDateValue = selectedDate.setHours(0, 0, 0, 0);
+
+      if (habitStartDate > selectedDateValue) {
+        return false;
+      }
+      
       if (habit.frequency === 'daily') {
         return true;
       }
@@ -203,6 +210,8 @@ export default function HabitsPage() {
   const filteredAllHabits = selectedColorAllHabits ? habits.filter(habit => habit.color === selectedColorAllHabits) : habits;
 
   const filteredDayHabits = selectedColorDayHabits ? selectedHabits.filter(habit => habit.color === selectedColorDayHabits) : selectedHabits;
+
+  
 
   // const toggleHabit = async (updatedHabit) => {
   //   try {

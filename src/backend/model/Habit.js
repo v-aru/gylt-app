@@ -7,6 +7,7 @@ const habitSchema = new Schema({
   frequency: { type: String, required: true },
   category: { type: String, required: true },
   days: { type: [String], default: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] },
+  startDate : {type: Date, default: Date.now },
   date: { type: Date, default: Date.now },
   color: { type: String, default: '#000000' },
   daysOfWeek: { type: Number, required: false },

@@ -22,7 +22,7 @@ export default function HabitList({ habits, onToggleHabit, onEditHabit }) {
           </HabitDetails>
           <HabitCheckbox
             type="checkbox"
-            checked={habit.completedDates.includes(today)} 
+            checked={habit.completedDates?.includes(today)} 
             onClick={(e) => e.stopPropagation()} 
             onChange={() => onToggleHabit(habit._id)}
           />
