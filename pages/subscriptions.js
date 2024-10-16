@@ -10,18 +10,20 @@ const SubscriptionContainer = styled.div`
   align-items: center;
   justify-content: center;
   height: calc(100vh - 80px); /* Adjusting for the height of the navigation */
-  background-color: #f5f5f5;
+  // background-color: #f5f5f5;
+  background-color: #323052;
   text-align: center;
+  color: white;
 `;
 
 const Title = styled.h1`
   font-size: 2.5rem;
-  color: #333;
+  // color: #333;
 `;
 
 const Message = styled.p`
   font-size: 1.5rem;
-  color: #555;
+  // color: #555;
   margin: 20px 0;
 `;
 
