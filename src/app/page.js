@@ -9,7 +9,8 @@ const MainContent = styled.div`
   align-items: center;
   flex-wrap: wrap;
   flex-direction: column;
-  background-color: #E5D9F2;
+  // background-color: #E5D9F2;
+  background-color: #f4f4f4;
   height: 100vh; 
   text-align: center; 
   padding: 20px; 
@@ -48,7 +49,7 @@ export default function Home() {
       <h1>Your Dashboard</h1>
       <p>Track your habits and stay aligned with your goals.</p>
       <HabitsProvider>
-        <Dashboard /> {/* Render the Dashboard component here */}
+        <Dashboard />
       </HabitsProvider>
     </MainContent>
   );

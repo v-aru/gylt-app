@@ -7,6 +7,7 @@ export const ProfileContainer = styled.div`
   align-items: center;
   height: 100vh;
   background-color: #f4f4f4;
+  // background-color: #323052;
 `;
 
 export const ProfileCard = styled.div`
@@ -215,6 +216,7 @@ export const NewAccount = styled.div`
   text-align: center;
   margin-top: 20px;
   font-size: 16px;
+  // color: white;
 
   a {
     cursor: pointer;

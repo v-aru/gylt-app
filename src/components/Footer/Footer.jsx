@@ -5,10 +5,11 @@ import styled from 'styled-components';
 
 const FooterContainer = styled.footer`
   background-color: #f1f1f1;
-  padding: 10px;
+  padding: 5px;
   position: relative;
   bottom: 0;
   width: 100%;
+  color: black;
 
   p {
     text-align: right;

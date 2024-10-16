@@ -6,7 +6,7 @@ export const HabitItem = styled.div`
   padding: 15px;
   margin-top: 15px;
   margin-bottom: 15px;
-  background-color: white;
+  background-color: #DFE0E2;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   cursor: pointer;

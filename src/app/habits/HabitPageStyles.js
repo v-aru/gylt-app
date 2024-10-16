@@ -164,7 +164,8 @@ export const HabitsSection = styled.div`
 `;
 
 export const StyledHabitListSection = styled.section`
-  background-color: #f9f9f9; /* Custom background */
+  background-color: #e5e5e5; /* Custom background */
+  // background-color: #5C5470;
   padding: 20px;
   border-radius: 15px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);

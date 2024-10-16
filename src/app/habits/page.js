@@ -247,8 +247,6 @@ export default function HabitsPage() {
   return (
     <>
     <Container>
-      <PageHeader>&nbsp;H&nbsp;A&nbsp;B&nbsp;I&nbsp;T&nbsp;S&nbsp;</PageHeader>
-
       {/* Quotes Section */}
       <QuotesSection>
           <blockquote>

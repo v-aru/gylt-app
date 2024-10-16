@@ -3,17 +3,15 @@ import styled from 'styled-components';
 export const Nav = styled.nav`
   display: flex;
   position: fixed;
-  top: 0;
-  left: 0;
+  overflow: hidden;
   flex-direction: column;
   justify-content: flex-start;
-  height: 100%;
+  height: 90%;
   width: ${({ isExpanded }) => (isExpanded ? '180px' : '70px')};
   padding: 20px 0;
   gap: 10px;
-  background-color: #3c096c;
+  background-color: #a06ec4;
   border-radius: 0 15px 15px 0;
-  z-index: 1000;
   transition: width 0.3s ease-in-out;
 `;
 
