@@ -5,11 +5,12 @@ import Logo from '../../../public/assets/Logo';
 
 
 const HeaderContainer = styled.header`
-  background-color: #323052;
+  // background-color: #323052;
+  background-color: #f4f4f4;
   color: white;
   text-align: center;
   display: flex;
-  border-radius: 20px;
+  // border-radius: 20px;
   flex-direction: column;
   align-items: center;
 `;
