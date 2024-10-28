@@ -7,7 +7,16 @@
 
 :root {
   --background: #ffffff;
+  /* --background: #f4f4f4; */
   --foreground: #171717;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 @media (prefers-color-scheme: light) {
@@ -20,6 +29,8 @@
 body {
   color: var(--foreground);
   background: var(--background);
+  margin: 0;
+  display: block;
 }
 
 /* @layer utilities {

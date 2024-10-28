@@ -3,35 +3,54 @@ import styled from 'styled-components';
 export const Nav = styled.nav`
   display: flex;
   position: fixed;
+  top: 0;
   left: 0;
   overflow: hidden;
   flex-direction: column;
   justify-content: flex-start;
-  height: 70%;
+  height: 100vh;
+  z-index: 1000;
   width: ${({ isExpanded }) => (isExpanded ? '180px' : '70px')};
   padding: 20px 0;
   gap: 10px;
   background-color: #3e274f;
-  border-radius: 0 15px 15px 0;
-  transition: width 0.3s ease-in-out;
+  transition: width 0.5s ease-in-out;
 `;
 
 export const NavItemsContainer = styled.div`
   display: flex;
   flex-direction: column; 
   justify-content: flex-start; 
+  width: 100%;
   height: calc(100% - 100px);
-  padding-top: 20px;
+  padding-top: 10px;
+  gap: 10px;
+  box-sizing: border-box;
+
+  // Targeting each NavItem by its nth-child for staggered transitions
+  & > :nth-child(1) {
+    transition-delay: 0s;
+  }
+  & > :nth-child(2) {
+    transition-delay: 0.1s;
+  }
+  & > :nth-child(3) {
+    transition-delay: 0.2s;
+  }
+  & > :nth-child(4) {
+    transition-delay: 0.3s;
+  }
 `;
 
 export const NavItem = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: ${({ isExpanded }) => (isExpanded ? 'flex-start' : 'center')};
+  // justify-content: ${({ isExpanded }) => (isExpanded ? 'flex-start' : 'center')};
+  justify-content: center;
   padding: 10px 20px;
   width: 100%;
-  box-sizing: border-box;
-  transition: justify-content 0.3s, gap 0.3s; 
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  opacity: 1;
+  transform: ${({ isExpanded }) => (isExpanded ? 'translateX(0)' : 'translateX(-10px)')};
   cursor: pointer; 
 
   a {
@@ -41,25 +60,25 @@ export const NavItem = styled.div`
     width: 100%;
     color: #B5C0D0;
     gap: ${({ isExpanded }) => (isExpanded ? '10px' : '0px')};
-    justify-content: ${({ isExpanded }) => (isExpanded ? 'flex-start' : 'center')};
 
     ${({ isActive }) =>
       isActive && `
         background-color: #7b2cbf;
         border-radius: 5px;
     `}
+  }
 
-    img {
-      object-fit: contain;
-      transition: margin 0.3s ease-in-out;
-      margin-left: ${({ isExpanded }) => (isExpanded ? '0px' : '0px')};
-    }
+  svg {
+    position: static;
   }
 
   span {
     opacity: ${({ isExpanded }) => (isExpanded ? 1 : 0)}; 
-    transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transform: ${({ isExpanded }) => (isExpanded ? 'translateY(0)' : 'translateY(-10px)')};
     white-space: nowrap;
     display: ${({ isExpanded }) => (isExpanded ? 'inline-block' : 'none')};
+    width: ${({ isExpanded }) => (isExpanded ? 'auto' : '0')};
+    overflow: hidden;
   }
 `;

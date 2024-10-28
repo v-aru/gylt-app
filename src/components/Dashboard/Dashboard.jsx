@@ -1,4 +1,3 @@
-// src/components/Dashboard.js
 import React, { useContext } from 'react';
 import { DashboardContainer, HabitCard, HabitTitle, HabitDescription, HabitProgress } from './DashboardStyles';
 import { HabitsContext } from '@/context/HabitsContext';

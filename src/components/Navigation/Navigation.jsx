@@ -1,10 +1,9 @@
 "use client";
 import Link from 'next/link';
-import Image from 'next/image';
 import { Nav, NavItem, NavItemsContainer } from './NavigationStyles';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Menu from '../../../public/assets/Menu';
+import { Collapse, Expand, HomeIcon, HabitsIcon, SubscriptionsIcon, ProfileIcon } from '../../../public/assets';
 
 const Navigation = () => {
   const router = useRouter();
@@ -25,7 +24,7 @@ const Navigation = () => {
         }}
         onClick={toggleNav}
       >
-        <Menu/>
+         {isExpanded ? <Collapse /> : <Expand />}
       </div>
 
       <NavItemsContainer>
@@ -33,15 +32,15 @@ const Navigation = () => {
         <NavItem isExpanded={isExpanded} isActive={router.pathname === "/"}>
           <Link href="/">
           {/* Dashboard */}
-            <Image src="/images/dashboard.svg" alt="Dashboard" width={35} height={35} />
+            <HomeIcon/>
             <span>Dashboard</span>
           </Link>
         </NavItem>
 
         <NavItem isExpanded={isExpanded} isActive={router.pathname === "/habits"}>
           <Link href="/habits">
-          {/* Habits */}
-            <Image src="/images/habits.png" alt="Habits" width={35} height={35} />
+          {/* Habits/Tasks */}
+            <HabitsIcon />
             <span>Habits</span>
           </Link>
         </NavItem>
@@ -49,15 +48,15 @@ const Navigation = () => {
         <NavItem isExpanded={isExpanded} isActive={router.pathname === "/subscriptions"}>
           <Link href="/subscriptions">
           {/* Subscriptions */}
-            <Image src="/images/subscriptions.svg" alt="Subscriptions" width={35} height={35} />
+            <SubscriptionsIcon />
             <span>Subscriptions</span>
           </Link>
         </NavItem>
 
         <NavItem isExpanded={isExpanded} isActive={router.pathname === "/profile"}>
           <Link href="/profile">
-          {/* Subscriptions */}
-            <Image src="/images/profileIcon.png" alt="Profile" width={35} height={35} />
+          {/* Profile */}
+            <ProfileIcon />
             <span>Profile</span>
           </Link>
         </NavItem>
