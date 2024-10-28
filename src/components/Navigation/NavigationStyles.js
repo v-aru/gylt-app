@@ -5,7 +5,7 @@ export const Nav = styled.nav`
   position: fixed;
   top: 0;
   left: 0;
-  overflow: hidden;
+  overflow-y: auto;
   flex-direction: column;
   justify-content: flex-start;
   height: 100vh;
