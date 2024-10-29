@@ -12,9 +12,7 @@ const UnorderedList = styled.ul`
 const DashboardTodoList = () => {
     return (
         <UnorderedList>
-            <ListItem><input type="checkbox" /> Sample To-Do Item 1</ListItem>
-            <ListItem><input type="checkbox" /> Sample To-Do Item 2</ListItem>
-            <ListItem><input type="checkbox" /> Sample To-Do Item 3</ListItem>
+            <ListItem>...</ListItem>
         </UnorderedList>
     );
 };

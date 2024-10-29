@@ -8,3 +8,7 @@ export { default as Menu } from './Menu';
 export { default as SubscriptionsIcon } from './SubscriptionsIcon';
 export { default as ProfileIcon } from './ProfileIcon';
 export { default as HabitsIcon } from './HabitsIcon';
+export { default as ChevronRight } from './ChevronRight';
+export { default as ChevronLeft } from './ChevronLeft';
+export { default as ChevronDoubleLeft } from './ChevronDoubleLeft';
+export { default as ChevronDoubleRight } from './ChevronDoubleRight';
