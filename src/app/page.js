@@ -25,7 +25,7 @@ const BodyHeaderContainer = styled.div`
   p {
     font-size: 1.2rem; 
     color: #333; 
-    margin-bottom: 5px; 
+    margin-bottom: 10px; 
   }
 `;
 

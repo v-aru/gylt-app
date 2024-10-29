@@ -3,19 +3,24 @@ import { DashboardContainer, SectionCard, SectionTitle } from './DashboardStyles
 import DashboardHabitList from './DashboardHabitList';
 import DashboardToDoList from './DashboardToDoList';
 import DashboardSubscriptionList from './DashboardSubscriptionList';
+import DashboardCalendar from './DashboardCalendar';
 import { HabitsContext } from '@/context/HabitsContext';
 
 const Dashboard = () => {
     const habitsContext = useContext(HabitsContext);
 
     if (!habitsContext) {
-        return null; // or return a loading indicator
+        return null; 
     }
 
     const { habits } = habitsContext;
 
     return (
         <DashboardContainer>
+            <SectionCard>
+                {/* <SectionTitle>Calendar</SectionTitle> */}
+                <DashboardCalendar />
+            </SectionCard>
             <SectionCard>
                 <SectionTitle>To-Dos for the Day</SectionTitle>
                 <DashboardToDoList />
