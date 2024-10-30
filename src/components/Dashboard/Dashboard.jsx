@@ -12,16 +12,17 @@ const Dashboard = () => {
     const habitsContext = useContext(HabitsContext);
     const [randomQuote, setRandomQuote] = useState({});
 
-    if (!habitsContext) {
-        return null; 
-    }
-
-    const { habits } = habitsContext;
     useEffect(() => {
         // Pick a random quote when the component renders
         const randomIndex = Math.floor(Math.random() * Quotes.length);
         setRandomQuote(Quotes[randomIndex]);
       }, []);
+    
+      if (!habitsContext) {
+        return null; 
+    }
+
+    const { habits } = habitsContext;
 
     return (
         <DashboardContainer>
