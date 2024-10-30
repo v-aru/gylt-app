@@ -1,15 +1,24 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { DashboardContainer, SectionCard, SectionTitle } from './DashboardStyles';
 import DashboardHabitList from './DashboardHabitList';
 import DashboardToDoList from './DashboardToDoList';
 import DashboardSubscriptionList from './DashboardSubscriptionList';
 import DashboardCalendar from './DashboardCalendar';
 import { HabitsContext } from '@/context/HabitsContext';
+import { Quotes } from '../../../public/positiveQuotes';
+import { QuotesSection } from '../../app/habits/QuotesSectionStyles';
 
 const Dashboard = () => {
     const habitsContext = useContext(HabitsContext);
+    const [randomQuote, setRandomQuote] = useState({});
 
-    if (!habitsContext) {
+    useEffect(() => {
+        // Pick a random quote when the component renders
+        const randomIndex = Math.floor(Math.random() * Quotes.length);
+        setRandomQuote(Quotes[randomIndex]);
+      }, []);
+    
+      if (!habitsContext) {
         return null; 
     }
 
@@ -17,6 +26,14 @@ const Dashboard = () => {
 
     return (
         <DashboardContainer>
+            {/* Quotes Section */}
+            <QuotesSection>
+                <blockquote>
+                    {randomQuote.quote}
+                    <footer>- {randomQuote.author}</footer>
+                </blockquote>
+            </QuotesSection>
+            
             <SectionCard>
                 {/* <SectionTitle>Calendar</SectionTitle> */}
                 <DashboardCalendar />
