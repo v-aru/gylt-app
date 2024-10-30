@@ -2,15 +2,15 @@
 import '../../../styles/globals.css';
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { Container, StyledCalendarContainer, StyledCalendar, PageHeader, ListHeader, StyledHabitListSection, CalendarButtons, HabitsSection } from './HabitPageStyles';
+import { Container, ListHeader, StyledHabitListSection, HabitsSection } from './HabitPageStyles';
 import HabitList from '../../components/Habits/HabitList/HabitList';
 import AddHabitButton from '@/components/Habits/CreateHabit/AddHabitButton';
 import CreateHabit from '@/components/Habits/CreateHabit/CreateHabit';
 import EditHabit from '@/components/Habits/EditHabit/EditHabit';
 import Modal from '@/components/Modal/Modal';
 import { CustomColorPicker } from '../../components/ColorPicker/ColorPicker';
-import { Quotes } from '../../../public/positiveQuotes';
-import { QuotesSection } from './QuotesSectionStyles';
+//import CalendarButtons from './../../../src/components/Calendar/CalendarStyles';
+import CalendarBar from '@/components/Calendar/CalendarBar.jsx';
 import axios from 'axios';
 
 
@@ -21,9 +21,7 @@ export default function HabitsPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editingHabit, setEditingHabit] = useState(null);
   const [date, setDate] = useState(new Date());
-  const [randomQuote, setRandomQuote] = useState({});
   const [activeStartDate, setActiveStartDate] = useState(new Date());
-  const [selectedColor, setSelectedColor] = useState(null); 
   const [selectedColorAllHabits, setSelectedColorAllHabits] = useState(null); 
   const [selectedColorDayHabits, setSelectedColorDayHabits] = useState(null); 
   const [isLoading, setIsLoading] = useState(true);
@@ -48,9 +46,6 @@ export default function HabitsPage() {
   };
 
   useEffect(() => {
-    // Pick a random quote when the component renders
-    const randomIndex = Math.floor(Math.random() * Quotes.length);
-    setRandomQuote(Quotes[randomIndex]);
     const fetchHabits = async () => {
       if (session) {
         await fetchUserHabits();
@@ -244,30 +239,16 @@ export default function HabitsPage() {
   return (
     <>
     <Container>
-      {/* Quotes Section */}
-      <QuotesSection>
-          <blockquote>
-            {randomQuote.quote}
-            <footer>- {randomQuote.author}</footer>
-          </blockquote>
-      </QuotesSection>
 
-      <StyledCalendarContainer>
-          <StyledCalendar
-            onChange={handleDayClick}
-            value={date}
-            activeStartDate={activeStartDate}
-            onActiveStartDateChange={({ activeStartDate }) => setActiveStartDate(activeStartDate)} 
-          />
+      {/* New Calendar Bar */}
+      <CalendarBar date={date} setDate={setDate} />
 
-          {/* Buttons for Yesterday, Today, Tomorrow */}
-          <CalendarButtons>
-            <button onClick={handleYesterday}>Yesterday</button>
-            <button onClick={handleToday}>Today</button>
-            <button onClick={handleTomorrow}>Tomorrow</button>
-          </CalendarButtons>
-      </StyledCalendarContainer>
-      
+      {/* Buttons for Yesterday, Today, Tomorrow */}
+      {/* <CalendarButtons>
+        <button onClick={() => setDate(new Date(date.setDate(date.getDate() - 1)))}>Yesterday</button>
+        <button onClick={() => setDate(new Date())}>Today</button>
+        <button onClick={() => setDate(new Date(date.setDate(date.getDate() + 1)))}>Tomorrow</button>
+      </CalendarButtons> */}
       
       <HabitsSection>    
           <StyledHabitListSection>
