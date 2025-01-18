@@ -29,7 +29,7 @@ const Navigation = () => {
 
       <NavItemsContainer>
 
-        <NavItem isExpanded={isExpanded} isActive={router.pathname === "/"}>
+        <NavItem className={router.asPath === "/" ? "active" : ""} isExpanded={isExpanded} isActive={router.asPath === "/"}>
           <Link href="/">
           {/* Dashboard */}
             <HomeIcon/>
@@ -37,7 +37,7 @@ const Navigation = () => {
           </Link>
         </NavItem>
 
-        <NavItem isExpanded={isExpanded} isActive={router.pathname === "/habits"}>
+        <NavItem isExpanded={isExpanded} isActive={router.asPath === "/habits"}>
           <Link href="/habits">
           {/* Habits/Tasks */}
             <HabitsIcon />
@@ -45,7 +45,7 @@ const Navigation = () => {
           </Link>
         </NavItem>
 
-        <NavItem isExpanded={isExpanded} isActive={router.pathname === "/subscriptions"}>
+        <NavItem isExpanded={isExpanded} isActive={router.asPath === "/subscriptions"}>
           <Link href="/subscriptions">
           {/* Subscriptions */}
             <SubscriptionsIcon />
@@ -53,7 +53,7 @@ const Navigation = () => {
           </Link>
         </NavItem>
 
-        <NavItem isExpanded={isExpanded} isActive={router.pathname === "/profile"}>
+        <NavItem isExpanded={isExpanded} isActive={router.asPath === "/profile"}>
           <Link href="/profile">
           {/* Profile */}
             <ProfileIcon />

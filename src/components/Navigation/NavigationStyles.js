@@ -52,6 +52,8 @@ export const NavItem = styled.div`
   opacity: 1;
   transform: ${({ isExpanded }) => (isExpanded ? 'translateX(0)' : 'translateX(-10px)')};
   cursor: pointer; 
+  background-color: ${({ isActive }) => (isActive ? '#7b2cbf' : 'transparent')};
+  border-radius: ${({ isActive }) => (isActive ? '5px' : '0')};
 
   a {
     display: flex;
@@ -61,15 +63,20 @@ export const NavItem = styled.div`
     color: #B5C0D0;
     gap: ${({ isExpanded }) => (isExpanded ? '10px' : '0px')};
 
-    ${({ isActive }) =>
-      isActive && `
-        background-color: #7b2cbf;
-        border-radius: 5px;
-    `}
+    &:hover {
+      background-color: #5D536B;
+      border-radius: 5px;
+    }
   }
 
   svg {
     position: static;
+    background-color: #645272; // Dark circular background for icon only , alternatively use #513c60
+    border-radius: 50%;
+    padding: 4px; 
+    width: 36px; 
+    height: 36px;
+    transition: background-color 0.3s ease;
   }
 
   span {

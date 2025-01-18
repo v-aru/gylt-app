@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { Container, ListHeader, StyledHabitListSection, HabitsSection } from './HabitPageStyles';
 import HabitList from '../../components/Habits/HabitList/HabitList';
+import WeeklyTracker from '@/components/Habits/WeeklyTracker/WeeklyTracker';
 import AddHabitButton from '@/components/Habits/CreateHabit/AddHabitButton';
 import CreateHabit from '@/components/Habits/CreateHabit/CreateHabit';
 import EditHabit from '@/components/Habits/EditHabit/EditHabit';
@@ -249,23 +250,28 @@ export default function HabitsPage() {
         <button onClick={() => setDate(new Date())}>Today</button>
         <button onClick={() => setDate(new Date(date.setDate(date.getDate() + 1)))}>Tomorrow</button>
       </CalendarButtons> */}
+
+        <div className='colorFilter' style={{marginTop:"15px", width:"80%", justifyContent:"center", alignItems:"center", margin:"15px auto"}}>
+          <ListHeader>Filter by Color: </ListHeader>
+          <CustomColorPicker selectedColor={selectedColorAllHabits} onSelectColor={setSelectedColorAllHabits} />
+        </div>
       
+        <ListHeader>Weekly Habits Progress</ListHeader>
+        
       <HabitsSection>    
           <StyledHabitListSection>
-            <ListHeader>&nbsp;a&nbsp;l&nbsp;l&nbsp;&nbsp;&nbsp;h&nbsp;a&nbsp;b&nbsp;i&nbsp;t&nbsp;s&nbsp;</ListHeader>
-            <div>
-              <CustomColorPicker selectedColor={selectedColorAllHabits} onSelectColor={setSelectedColorAllHabits} />
-            </div>
-            <HabitList habits={filteredAllHabits} onToggleHabit={toggleHabit} onEditHabit={handleEditClick} />
+            
+            <WeeklyTracker habits={filteredAllHabits} />
+            {/* <HabitList habits={filteredAllHabits} onToggleHabit={toggleHabit} onEditHabit={handleEditClick} /> */}
           </StyledHabitListSection>
         
-         <StyledHabitListSection>
+         {/* <StyledHabitListSection>
             <ListHeader>&nbsp;H&nbsp;a&nbsp;b&nbsp;i&nbsp;t&nbsp;s&nbsp;&nbsp;&nbsp;f&nbsp;o&nbsp;r&nbsp;&nbsp;&nbsp;t&nbsp;h&nbsp;e&nbsp;&nbsp;&nbsp;d&nbsp;a&nbsp;y&nbsp;</ListHeader>
             <div>
               <CustomColorPicker selectedColor={selectedColorDayHabits} onSelectColor={setSelectedColorDayHabits} />
             </div>
-            <HabitList habits={filteredDayHabits} onToggleHabit={toggleHabit} onEditHabit={handleEditClick} />
-          </StyledHabitListSection>
+            <HabitList habits={filteredDayHabits} onToggleHabit={toggleHabit} onEditHabit={handleEditClick} /> */}
+          {/* </StyledHabitListSection> */}
       </HabitsSection>
 
       <AddHabitButton onClick={() => {
