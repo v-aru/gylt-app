@@ -5,7 +5,7 @@ import 'react-calendar/dist/Calendar.css';
 export const Container = styled.div`
   width: 90%;
   margin: 0 auto;
-  padding: 20px;
+  padding: 40px;
   // background-color: #D5C6E0;
 `;
 
@@ -39,13 +39,11 @@ export const PageHeader = styled.div`
 // Flexbox container to align the calendar and the habit list side by side
 
 export const ListHeader = styled.div`
-  background-color: purple;
-  color: white;
-  font-size: 24px;
+  background-color: #989FCE;
+  color: black;
+  font-size: 28px;
   text-align: center;
   margin-bottom: 20px;
-  border: none;
-  border-radius: 8px;
   font-family: "Allura", cursive;
   font-weight: 400;
   font-style: normal;
@@ -59,7 +57,7 @@ export const HabitsSection = styled.div`
 `;
 
 export const StyledHabitListSection = styled.section`
-  background-color: #e5e5e5; /* Custom background */
+  // background-color: #e5e5e5; /* Custom background */
   // background-color: #5C5470;
   padding: 20px;
   border-radius: 15px;

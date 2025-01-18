@@ -6,7 +6,7 @@ import DashboardSubscriptionList from './DashboardSubscriptionList';
 import DashboardCalendar from './DashboardCalendar';
 import { HabitsContext } from '@/context/HabitsContext';
 import { Quotes } from '../../../public/positiveQuotes';
-import { QuotesSection } from '../../app/habits/QuotesSectionStyles';
+import { QuotesSection } from '../../../styles/QuotesSectionStyles';
 
 const Dashboard = () => {
     const habitsContext = useContext(HabitsContext);
