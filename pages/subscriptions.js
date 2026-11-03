@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import styled from "styled-components";
+import { fadeUp } from "../styles/animations";
 import Modal from "@/components/Modal/Modal";
 import SignInPrompt from "@/components/UI/SignInPrompt";
+import SkeletonList from "@/components/UI/Skeleton";
+import CountUp from "@/components/UI/CountUp";
 import SubscriptionForm from "@/components/Subscriptions/SubscriptionForm";
 import SubscriptionList from "@/components/Subscriptions/SubscriptionList";
 import { formatMoney, monthlyTotals, withRenewalInfo } from "@/components/Subscriptions/subscriptionUtils";
 import { Card, ErrorText, FloatingButton, MutedText, PageTitle, SectionTitle } from "@/components/UI/UI";
 import { useSubscriptions } from "@/context/SubscriptionsContext";
+import { useToast } from "@/context/ToastContext";
 
 const Summary = styled.div`
   display: grid;
@@ -33,20 +37,28 @@ const AlertBanner = styled.div`
   padding: 12px 16px;
   margin-bottom: 20px;
   font-weight: 600;
+  animation: ${fadeUp} 0.4s ease backwards;
 `;
 
-const formatTotals = (totals, multiplier = 1) =>
-  Object.entries(totals)
-    .map(([currency, amount]) => formatMoney(amount * multiplier, currency))
-    .join(" + ") || formatMoney(0);
+// One animated figure per currency, e.g. "€21.48 + $9.99".
+const Totals = ({ totals, multiplier = 1 }) => {
+  const entries = Object.entries(totals);
+  if (entries.length === 0) return formatMoney(0);
+  return entries.map(([currency, amount], index) => (
+    <span key={currency}>
+      {index > 0 && " + "}
+      <CountUp value={amount * multiplier} format={(n) => formatMoney(n, currency)} />
+    </span>
+  ));
+};
 
 export default function SubscriptionsPage() {
   const { status } = useSession();
   const { subscriptions, isLoading, error, create, update, remove } = useSubscriptions();
+  const showToast = useToast();
   // null = closed, {} = creating, subscription = editing
   const [formSubscription, setFormSubscription] = useState(null);
 
-  if (status === "loading") return <MutedText>Loading…</MutedText>;
   if (status === "unauthenticated") return <SignInPrompt message="Sign in to keep track of your subscriptions." />;
 
   const withInfo = withRenewalInfo(subscriptions);
@@ -54,14 +66,26 @@ export default function SubscriptionsPage() {
   const totals = monthlyTotals(subscriptions);
 
   const handleSubmit = async (values) => {
-    if (formSubscription._id) await update(formSubscription._id, values);
-    else await create(values);
+    if (formSubscription._id) {
+      await update(formSubscription._id, values);
+      showToast("Changes saved");
+    } else {
+      await create(values);
+      showToast(`${values.name} added`);
+    }
     setFormSubscription(null);
   };
 
   const handleDelete = async () => {
-    await remove(formSubscription._id);
+    const { _id, __v, userId, createdAt, updatedAt, renewal, daysLeft, isDueSoon, ...deleted } = formSubscription;
+    await remove(_id);
     setFormSubscription(null);
+    showToast(`${deleted.name} deleted`, {
+      action: {
+        label: "Undo",
+        onClick: () => create(deleted).catch(() => showToast("Couldn't restore it", { tone: "error" })),
+      },
+    });
   };
 
   return (
@@ -78,15 +102,21 @@ export default function SubscriptionsPage() {
       <Summary>
         <Stat>
           <MutedText>Active</MutedText>
-          <strong>{subscriptions.length}</strong>
+          <strong>
+            <CountUp value={subscriptions.length} />
+          </strong>
         </Stat>
         <Stat>
           <MutedText>Per month</MutedText>
-          <strong>{formatTotals(totals)}</strong>
+          <strong>
+            <Totals totals={totals} />
+          </strong>
         </Stat>
         <Stat>
           <MutedText>Per year</MutedText>
-          <strong>{formatTotals(totals, 12)}</strong>
+          <strong>
+            <Totals totals={totals} multiplier={12} />
+          </strong>
         </Stat>
       </Summary>
 
@@ -94,13 +124,14 @@ export default function SubscriptionsPage() {
 
       <Card>
         <SectionTitle>Upcoming renewals</SectionTitle>
-        {isLoading ? (
-          <MutedText>Loading your subscriptions…</MutedText>
+        {isLoading || status === "loading" ? (
+          <SkeletonList rows={3} height={72} />
         ) : (
           <SubscriptionList
             subscriptions={withInfo}
             onEdit={setFormSubscription}
             emptyMessage="No subscriptions yet. Add Netflix, Spotify, your gym…"
+            emptyAction={{ label: "Add a subscription", onClick: () => setFormSubscription({}) }}
           />
         )}
       </Card>

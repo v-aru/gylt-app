@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { liftOnHover, pop } from "../../../styles/animations";
 
 export const PageTitle = styled.h1`
   font-size: 2rem;
@@ -12,6 +13,7 @@ export const Card = styled.section`
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
   padding: 20px;
+  ${liftOnHover}
 `;
 
 export const SectionTitle = styled.h2`
@@ -27,10 +29,14 @@ export const Button = styled.button`
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, transform 0.15s ease;
 
   &:hover {
-    opacity: 0.85;
+    opacity: 0.9;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.97);
   }
 
   &:disabled {
@@ -45,7 +51,20 @@ export const FloatingButton = styled(Button)`
   right: 24px;
   z-index: 900;
   background-color: #3b185f;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 999px;
+  padding: 12px 22px;
+  box-shadow: 0 6px 16px rgba(59, 24, 95, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(59, 24, 95, 0.4);
+  }
+
+  &:active {
+    animation: ${pop} 0.3s ease;
+  }
 `;
 
 export const ErrorText = styled.p`

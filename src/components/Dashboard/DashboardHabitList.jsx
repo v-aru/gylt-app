@@ -1,30 +1,27 @@
 import HabitList from "@/components/Habits/HabitList/HabitList";
-import { MutedText } from "@/components/UI/UI";
+import DayProgress from "@/components/UI/DayProgress";
+import SkeletonList from "@/components/UI/Skeleton";
 import { useHabits } from "@/context/HabitsContext";
 import { isHabitDoneOn, isHabitDueOn } from "@/lib/dates";
-import { Progress } from "./DashboardStyles";
 
 const DashboardHabitList = () => {
   const { habits, isLoading, toggleHabit } = useHabits();
   const today = new Date();
 
-  if (isLoading) return <MutedText>Loading…</MutedText>;
+  if (isLoading) return <SkeletonList rows={2} />;
 
   const dueToday = habits.filter((habit) => isHabitDueOn(habit, today));
   const doneCount = dueToday.filter((habit) => isHabitDoneOn(habit, today)).length;
 
   return (
     <>
-      {dueToday.length > 0 && (
-        <Progress>
-          {doneCount} of {dueToday.length} done{doneCount === dueToday.length && " 🎉"}
-        </Progress>
-      )}
+      <DayProgress done={doneCount} total={dueToday.length} />
       <HabitList
         habits={dueToday}
         date={today}
         onToggleHabit={toggleHabit}
         emptyMessage={habits.length === 0 ? "You haven't added any habits yet." : "Nothing due today. Enjoy!"}
+        emptyEmoji={habits.length === 0 ? "🌱" : "🌴"}
       />
     </>
   );

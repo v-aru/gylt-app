@@ -92,3 +92,18 @@ export function monthlyCost(subscription) {
   if (subscription.billingCycle === "yearly") return subscription.cost / 12;
   return subscription.cost;
 }
+
+// Consecutive scheduled days completed, counting back from today. Today only
+// breaks the streak once it's over, so an unticked "today" doesn't reset it.
+export function habitStreak(habit, today = new Date()) {
+  const start = fromDateKey(habit.startDate);
+  let day = fromDateKey(toDateKey(today));
+  let streak = 0;
+
+  for (let i = 0; i < 366 && day >= start; i += 1, day = addDays(day, -1)) {
+    if (!isHabitDueOn(habit, day)) continue;
+    if (isHabitDoneOn(habit, day)) streak += 1;
+    else if (i > 0) break;
+  }
+  return streak;
+}

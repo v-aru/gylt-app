@@ -24,7 +24,7 @@ import {
 } from "../styles/ProfileStyles";
 import SignInForm from "@/components/Profile/SignIn/SignInForm";
 import SignUpForm from "@/components/Profile/SignUp/SignUpForm";
-import { MutedText } from "@/components/UI/UI";
+import SkeletonList from "@/components/UI/Skeleton";
 import { apiRequest } from "@/lib/api";
 
 const OAUTH_ICONS = {
@@ -178,7 +178,9 @@ const ProfilePage = () => {
       <ProfileCard>
         <ProfileDetails>
           {status === "loading" ? (
-            <MutedText>Loading…</MutedText>
+            <div style={{ width: "100%" }}>
+              <SkeletonList rows={4} height={40} />
+            </div>
           ) : session ? (
             <SignedInProfile session={session} />
           ) : (

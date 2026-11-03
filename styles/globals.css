@@ -33,3 +33,21 @@ input,
 select {
   font: inherit;
 }
+
+:focus-visible {
+  outline: 3px solid #b6a6ca;
+  outline-offset: 2px;
+}
+
+/* Respect the OS "reduce motion" setting. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

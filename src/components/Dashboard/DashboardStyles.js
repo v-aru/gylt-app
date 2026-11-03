@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { liftOnHover, staggered } from "../../../styles/animations";
 
 export const DashboardContainer = styled.div`
   display: grid;
@@ -15,6 +16,18 @@ export const SectionCard = styled.section`
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
+  ${liftOnHover}
+
+  /* Cards cascade in one after another. */
+  &:nth-child(1) {
+    ${staggered(1, 80)}
+  }
+  &:nth-child(2) {
+    ${staggered(2, 80)}
+  }
+  &:nth-child(3) {
+    ${staggered(3, 80)}
+  }
 `;
 
 export const SectionTitle = styled.h2`
@@ -32,11 +45,11 @@ export const CardFooter = styled.div`
     color: var(--accent);
     font-weight: 600;
     text-decoration: none;
-  }
-`;
+    display: inline-block;
+    transition: transform 0.2s ease;
 
-export const Progress = styled.div`
-  margin-bottom: 12px;
-  font-weight: bold;
-  color: var(--success);
+    &:hover {
+      transform: translateX(4px);
+    }
+  }
 `;
