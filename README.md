@@ -1,91 +1,99 @@
 # GYLT: Get Your Life Together
 
-GYLT is an all-in-one personal management tool designed to help you organize and streamline essential aspects of your life. Currently, the app focuses on two key features:
+GYLT is a personal management app that helps you build habits and keep your subscriptions under control.
 
-- *Habit Tracker:* Track your daily, weekly, or monthly habits, set goals, and visualize your progress.
+- **Habit Tracker:** create daily, weekly, monthly or custom-day habits, tick them off, and see your week at a glance.
+- **Subscription Manager:** track what you pay for, when it renews, and what it costs you per month and per year, with a heads-up before each renewal.
 
-- *Subscription Manager:* Manage your subscriptions, get renewal alerts, and prevent unexpected charges.
-
-More features (Health Tracker, To-Do List, Pomodoro Timer, Budget Tracker) are in the pipeline and will be added as bonus features in future updates.
+More features (Health Tracker, To-Do List, Pomodoro Timer, Budget Tracker) are planned for later.
 
 ---
+
 ## Features
 
-1. *Habit Tracker*
-- Create: Add new habits with custom schedules (daily, weekly, monthly).
-- Read: View all tracked habits and their completion history.
-- Update: Modify or reschedule habits as your priorities change.
-- Delete: Remove habits that are no longer relevant.
-- Calendar Integration: Sync habits with your Google Calendar for reminders.
+### Dashboard
+- A random motivational quote.
+- Today's habits with a progress count. Tick them off right there.
+- Subscriptions renewing in the next 30 days.
+- A month calendar.
 
-2. *Subscription Manager*
-- Create: Add subscriptions (e.g., Netflix, Spotify) with renewal dates and costs.
-- Read: View a list of active subscriptions along with renewal dates and payment history.
-- Update: Modify subscription details like renewal date or cost.
-- Delete: Remove subscriptions that you no longer use.
-- Renewal Alerts: Get notified when a subscription is about to renew to avoid surprise charges.
+### Habit Tracker
+- **Create** a habit with a name, category, color and frequency:
+  - *Daily:* every day.
+  - *Weekly:* on the same weekday it started.
+  - *Monthly:* on the same date it started (or the last day of shorter months).
+  - *Custom:* on the weekdays you pick.
+- **Read:** pick any day in the week bar to see what's due, and see the weekly progress table (done / due).
+- **Update:** tick a habit off for today or any past day; click a habit to edit it.
+- **Delete:** remove a habit from the edit dialog.
+- **Filter** both views by color.
 
-## CRUD Operations
+### Subscription Manager
+- **Create** a subscription with name, category, cost and currency, billing cycle (weekly / monthly / yearly), next renewal date, a "remind me X days before" setting, and a payment label (e.g. "PayPal").
+- **Read:** all subscriptions sorted by next renewal, plus monthly and yearly totals.
+- **Update / Delete:** click a subscription to edit or remove it.
+- **Renewal alerts:** a banner and badges flag every subscription inside its reminder window. Past renewal dates roll forward automatically by the billing cycle.
 
-*Habit Tracker*
-- Create: User can create new habits by specifying the habit name, schedule (daily/weekly/monthly), start date, and optional reminders.
-- Read: Users can view all their habits in a list or calendar format, check progress, and filter habits by completion or schedule.
-- Update: Users can edit the habit details, including changing the schedule, reminders, or habit goals.
-- Delete: Users can remove a habit from their list when it is no longer needed or relevant.
-
-*Subscription Manager*
-- Create: Users can input subscription details such as the name, provider, cost, renewal date, and payment method.
-- Read: Users can view an organized list of their subscriptions, including renewal date and past payment history.
-- Update: Users can update subscription information (e.g., cost changes, renewal date changes) if they switch plans.
-- Delete: Users can delete subscriptions when they cancel or no longer need them.
-- Alerts: Automated system sends reminders X days before a renewal to notify the user of upcoming charges.
-
-## User Stories
-
-*Habit Tracker*
-- As a user, I want to add a new habit so that I can track my progress over time.
-- As a user, I want to view all my habits in a list so I can easily see what I need to do today, this week, or this month.
-- As a user, I want to mark a habit as complete so I can track my progress.
-- As a user, I want to edit a habit’s schedule so I can change its frequency or reminders if needed.
-- As a user, I want to delete a habit that I no longer want to track.
-- As a user, I want to sync my habits with Google Calendar so I can receive reminders across platforms.
-
-*Subscription Manager*
-- As a user, I want to add a new subscription so that I can keep track of renewal dates and avoid surprise charges.
-- As a user, I want to view all my subscriptions in a single list to monitor my expenses.
-- As a user, I want to edit subscription details (like renewal dates or costs) so I can update them if my plan changes.
-- As a user, I want to delete a subscription when I no longer use the service.
-- As a user, I want to get renewal alerts a few days before my subscription renews so I can decide whether to continue.
+### Accounts
+- Sign up and sign in with email and password (passwords are hashed with bcrypt).
+- Optional Google, GitHub and Facebook sign-in. Each button only appears when that provider's keys are configured.
+- Profile page with editable details.
+- Every habit and subscription belongs to the signed-in user; the API never returns or changes another user's data.
 
 ---
-## Installation
 
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/yourusername/GYLT.git
-    ```
+## Getting started
 
-2. Navigate to the project directory and install dependencies:
-    ```bash
-    cd GYLT
-    npm install
-    ```
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Create your environment file:
+   ```bash
+   cp .env.example .env.local
+   ```
+   Then fill in:
+   - `MONGODB_URI`: a local MongoDB (`mongodb://127.0.0.1:27017/gylt`) or a MongoDB Atlas connection string.
+   - `NEXTAUTH_SECRET`: generate one with `openssl rand -base64 32`.
+   - Optionally, OAuth keys for Google / GitHub / Facebook.
 
 3. Run the development server:
-    ```bash
-    npm run dev
-    ```
+   ```bash
+   npm run dev
+   ```
 
-4. Open the application in your browser:
-    ```
-    http://localhost:3000
-    ```
+4. Open [http://localhost:3000](http://localhost:3000), go to **Profile**, and sign up.
 
-## Technologies Used
-- **React** (Frontend)
-- **Next.js** (Backend)
-- **Styled Components** (Styling)
-- **Google Calendar Integration** (Habit tracking and subscription reminders)
+### Deploying (e.g. Vercel)
+Set the same environment variables in your hosting provider. Set `NEXTAUTH_URL` to your production URL, and add that URL as an authorized callback (`<url>/api/auth/callback/<provider>`) for any OAuth provider you use.
+
+---
+
+## Project structure
+
+```
+pages/                 Next.js pages (Pages Router)
+  index.js             Dashboard
+  habits.js            Habit tracker
+  subscriptions.js     Subscription manager
+  profile.js           Sign in / sign up / profile
+  api/                 API routes: auth, signup, profile, habits, subscriptions
+src/
+  backend/             MongoDB connection and Mongoose models
+  components/          UI components
+  context/             Habits and subscriptions data providers
+  lib/                 Date helpers, API client, API auth helper
+  data/quotes.js       Motivational quotes
+styles/                Global CSS and shared styled-components
+```
+
+## Technologies used
+- **Next.js 14** (Pages Router) with API routes
+- **React 18**
+- **MongoDB** with **Mongoose**
+- **NextAuth.js** for authentication
+- **styled-components** for styling
 
 ## License
 This project is licensed under the MIT License.

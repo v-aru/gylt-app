@@ -1,32 +1,52 @@
 import styled from "styled-components";
 
-export const HabitItem = styled.div`
+export const List = styled.ul`
+  list-style: none;
   display: flex;
-  justify-content: space-between;
-  padding: 15px;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  background-color: #DFE0E2;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+export const HabitItem = styled.li`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  background-color: #dfe0e2;
+  border-left: 6px solid ${({ $color }) => $color};
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+`;
+
+export const HabitDetails = styled.button`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  text-align: left;
+  background: none;
+  border: none;
+  color: inherit;
   cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+  }
 `;
 
 export const HabitName = styled.span`
-  font-size: 1.2rem;
-  color: black;
-  text-decoration: ${props => (props.completed ? 'line-through' : 'none')};
-  color: ${props => (props.completed ? '#888' : '#000')}; 
+  font-size: 1.1rem;
+  text-decoration: ${({ $completed }) => ($completed ? "line-through" : "none")};
+  color: ${({ $completed }) => ($completed ? "#888" : "#000")};
+`;
+
+export const HabitMeta = styled.span`
+  font-size: 0.85rem;
+  color: var(--muted);
 `;
 
 export const HabitCheckbox = styled.input`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  accent-color: #ACACDE;
-`;
-
-export const HabitDetails = styled.div`
-  display: flex;
-  flex-direction: column;
+  width: 22px;
+  height: 22px;
+  accent-color: #7b2cbf;
+  cursor: pointer;
 `;

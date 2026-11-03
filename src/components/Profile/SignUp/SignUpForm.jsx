@@ -1,134 +1,93 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { Form, InputField, SubmitButton, Message, SelectField, SignUpFormContainer } from '../../../../styles/ProfileStyles'; 
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { Form, InputField, SubmitButton, Message, SelectField, SignUpFormContainer } from "../../../../styles/ProfileStyles";
+import { apiRequest } from "@/lib/api";
 
-const SignUpForm = ({ isSignUp }) => {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [dateOfBirth, setDateOfBirth] = useState('');
-    const [age, setAge] = useState('');
-    const [gender, setGender] = useState('');
-    const [email, setEmail] = useState('');
-    const [location, setLocation] = useState('');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [message, setMessage] = useState('');
+const EMPTY_FORM = {
+  firstName: "",
+  lastName: "",
+  dateOfBirth: "",
+  gender: "",
+  email: "",
+  city: "",
+  username: "",
+  password: "",
+  confirmPassword: "",
+};
 
-    const calculateAge = (dateOfBirth) => {
-        const birthDate = new Date(dateOfBirth);
-        const ageDiff = Date.now() - birthDate.getTime();
-        const ageDate = new Date(ageDiff);
-        return Math.abs(ageDate.getUTCFullYear() - 1970);
-    };
+const SignUpForm = () => {
+  const [values, setValues] = useState(EMPTY_FORM);
+  const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const setField = (field) => (event) => setValues((prev) => ({ ...prev, [field]: event.target.value }));
 
-        // Validate password confirmation
-        if (password !== confirmPassword) {
-            setMessage("Passwords do not match.");
-            return;
-        }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-        // Calculate age from date of birth
-        const calculatedAge = calculateAge(dateOfBirth);
-        setAge(calculatedAge);
+    if (values.password !== values.confirmPassword) {
+      setMessage("Passwords do not match.");
+      return;
+    }
 
-        try {
-            const response = await axios.post('/api/signup', {
-                firstName,
-                lastName,
-                dateOfBirth,
-                age: calculatedAge, 
-                gender,
-                email,
-                location,
-                username,
-                password,
-            });
-            setMessage(response.data.message);
-        } catch (error) {
-            setMessage(error.response.data.message);
-        }
-    };
+    setIsSubmitting(true);
+    try {
+      const { confirmPassword, ...account } = values;
+      await apiRequest("/api/signup", { method: "POST", body: account });
+      const result = await signIn("credentials", { email: values.email, password: values.password, redirect: false });
+      if (result?.error) throw new Error("Account created, but signing in failed. Please sign in.");
+    } catch (error) {
+      setMessage(error.message);
+      setIsSubmitting(false);
+    }
+  };
 
-    return (
-        <SignUpFormContainer style={{ marginTop: isSignUp ? '50px' : '0' }}>
-            <Form onSubmit={handleSubmit} style={{ width: '100%' }}>
-                <InputField
-                    type="text"
-                    placeholder="First Name*"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    required
-                />
-                <InputField
-                    type="text"
-                    placeholder="Last Name*"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    required
-                />
-                <InputField
-                    type="date"
-                    placeholder="Date of Birth*"
-                    value={dateOfBirth}
-                    onChange={(e) => setDateOfBirth(e.target.value)}
-                    required
-                    style={{color: '#5c677d' }}
-                />
-                <SelectField
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                    required
-                    style={{ color: '#5c677d' }}
-                >
-                    <option value="" disabled>Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Transgender">Transgender</option>
-                    <option value="Prefer not to say">Prefer not to say</option>
-                </SelectField>
-                <InputField
-                    type="email"
-                    placeholder="Email*"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
-                <InputField
-                    type="text"
-                    placeholder="Location"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                />
-                <InputField
-                    type="text"
-                    placeholder="Username*"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                />
-                <InputField
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-                <InputField
-                    type="password"
-                    placeholder="Confirm Password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required
-                />
-                <SubmitButton type="submit">Sign Up</SubmitButton>
-                {message && <Message>{message}</Message>}
-            </Form>
-        </SignUpFormContainer>
-    );
+  return (
+    <SignUpFormContainer>
+      <Form onSubmit={handleSubmit} style={{ width: "100%" }}>
+        <InputField placeholder="First name*" value={values.firstName} onChange={setField("firstName")} required />
+        <InputField placeholder="Last name" value={values.lastName} onChange={setField("lastName")} />
+        <InputField
+          type="date"
+          aria-label="Date of birth"
+          value={values.dateOfBirth}
+          onChange={setField("dateOfBirth")}
+          style={{ color: "#5c677d" }}
+        />
+        <SelectField value={values.gender} onChange={setField("gender")} style={{ color: "#5c677d" }}>
+          <option value="">Gender (optional)</option>
+          <option value="Female">Female</option>
+          <option value="Male">Male</option>
+          <option value="Non-binary">Non-binary</option>
+          <option value="Prefer not to say">Prefer not to say</option>
+        </SelectField>
+        <InputField type="email" placeholder="Email*" autoComplete="email" value={values.email} onChange={setField("email")} required />
+        <InputField placeholder="City" value={values.city} onChange={setField("city")} />
+        <InputField placeholder="Username" value={values.username} onChange={setField("username")} />
+        <InputField
+          type="password"
+          placeholder="Password* (min. 8 characters)"
+          autoComplete="new-password"
+          minLength={8}
+          value={values.password}
+          onChange={setField("password")}
+          required
+        />
+        <InputField
+          type="password"
+          placeholder="Confirm password*"
+          autoComplete="new-password"
+          value={values.confirmPassword}
+          onChange={setField("confirmPassword")}
+          required
+        />
+        <SubmitButton type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Creating account…" : "Sign Up"}
+        </SubmitButton>
+        {message && <Message>{message}</Message>}
+      </Form>
+    </SignUpFormContainer>
+  );
 };
 
 export default SignUpForm;

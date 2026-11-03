@@ -3,112 +3,104 @@ import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
-import User from "@/backend/model/User";
-import { compare } from 'bcryptjs';
 import dbConnect from "@/backend/dbConnect";
+import User from "@/backend/model/User";
 
-async function findUserByEmail(email) {
-  return await User.findOne({ email });
+const providers = [
+  CredentialsProvider({
+    name: "Email",
+    credentials: {
+      email: { label: "Email", type: "email" },
+      password: { label: "Password", type: "password" },
+    },
+    async authorize(credentials) {
+      await dbConnect();
+      const user = await User.findOne({ email: credentials.email?.toLowerCase() }).select("+password");
+      if (!user || !(await user.comparePassword(credentials.password))) {
+        return null;
+      }
+      return {
+        id: user.id,
+        name: user.firstName || user.username,
+        email: user.email,
+        image: user.profileImage || null,
+      };
+    },
+  }),
+];
+
+// OAuth providers are optional: they are only offered when their keys are configured.
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  providers.push(
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    })
+  );
+}
+if (process.env.GITHUB_ID && process.env.GITHUB_SECRET) {
+  providers.push(
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
+    })
+  );
+}
+if (process.env.FACEBOOK_ID && process.env.FACEBOOK_SECRET) {
+  providers.push(
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_ID,
+      clientSecret: process.env.FACEBOOK_SECRET,
+      authorization: { params: { scope: "email,public_profile" } },
+    })
+  );
 }
 
-// async function loginFunction(email, password) {
-//   const user = await findUserByEmail(email);
-//   if (!user) {
-//     throw new Error("No user found with this email");
-//   }
-
-//   const isMatch = await compare(password, user.password);
-//   if (!isMatch) {
-//     throw new Error("Invalid password");
-//   }
-
-//   return {
-//     id: user._id,
-//     firstName: user.name,
-//     email: user.email,
-//     image: user.image || null,
-//   };
-// }
-
-
-export default NextAuth({
-  providers: [
-    GoogleProvider({
-        clientId: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
-    GitHubProvider({
-        clientId: process.env.GITHUB_ID, 
-        clientSecret: process.env.GITHUB_SECRET, 
-      }),
-    FacebookProvider({
-        clientId: process.env.FACEBOOK_ID,
-        clientSecret: process.env.FACEBOOK_SECRET, 
-        authorization: {
-            params: {
-              scope: "email,public_profile",
-            },
-          },
-      }),
-    // CredentialsProvider({
-    //   name: "Email",
-    //   credentials: {
-    //     email: { label: "Email", type: "text" },
-    //     password: { label: "Password", type: "password" },
-    //   },
-    //   async authorize(credentials) {
-    //     return await loginFunction(credentials.email, credentials.password);
-    //   },
-    // }),
-  ],
+export const authOptions = {
+  providers,
   pages: {
     signIn: "/profile",
+    error: "/profile",
   },
+  session: { strategy: "jwt" },
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, user }) {
+    async signIn({ user, account }) {
+      if (account?.provider === "credentials") return true;
+      try {
+        await dbConnect();
+        const existingUser = await User.findOne({ email: user.email?.toLowerCase() });
+        if (!existingUser) {
+          await User.create({
+            email: user.email,
+            username: user.name,
+            profileImage: user.image,
+            oauthProvider: account.provider,
+          });
+        }
+        return true;
+      } catch (error) {
+        console.error("Error in signIn callback:", error);
+        return false;
+      }
+    },
+    async jwt({ token, user, account }) {
       if (user) {
-        const dbUser = await User.findOne({ email: user.email });
-        token.id = dbUser.id;
-        token.email = dbUser.email;
+        if (account?.provider === "credentials") {
+          token.id = user.id;
+        } else {
+          await dbConnect();
+          const dbUser = await User.findOne({ email: user.email?.toLowerCase() });
+          token.id = dbUser?.id;
+        }
       }
       return token;
     },
     async session({ session, token }) {
       session.user.id = token.id;
-      session.user.email = token.email;
       return session;
     },
-    async signIn({ user, account, profile }) {
-      await dbConnect();
+  },
+};
 
-      try {
-        const existingUser = await User.findOne({ email: user.email });
-
-        if (!existingUser) {
-          console.log('User does not exist, creating new user');
-          const newUser = new User({
-            email: user.email,
-            username: user.name,
-            profileImage: user.image, 
-            oauthProvider: account.provider, 
-            age: user.age ? user.age : undefined,
-            dateOfBirth: user.dateOfBirth ? user.dateOfBirth : undefined,
-            gender: user.gender ? user.gender : undefined,
-          });
-          await newUser.save();
-        }
-        return true; 
-      } catch (error) {
-        console.error('Error in signIn callback:', error);
-        return false; 
-      }
-    },
-  },
-  session: {
-    strategy: "jwt",
-  },
-  jwt: {
-    secret: process.env.NEXTAUTH_SECRET,
-    encryption: true,
-  },
-});
+export default NextAuth(authOptions);

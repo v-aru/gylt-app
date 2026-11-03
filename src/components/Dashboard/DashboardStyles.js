@@ -1,55 +1,42 @@
 import styled from "styled-components";
 
 export const DashboardContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  background-color: #f4f4f4;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   gap: 20px;
-  padding: 20px;
+  margin-top: 30px;
+  text-align: left;
 `;
 
-export const SectionCard = styled.div`
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+export const SectionCard = styled.section`
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
 `;
 
 export const SectionTitle = styled.h2`
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 15px;
+  font-size: 1.3rem;
+  color: var(--primary);
+  margin-bottom: 15px;
 `;
 
-export const HabitCard = styled.div`
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-  width: 300px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s;
+export const CardFooter = styled.div`
+  margin-top: auto;
+  padding-top: 15px;
+  text-align: right;
 
-  &:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  a {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
   }
 `;
 
-export const HabitTitle = styled.h2`
-  font-size: 1.5rem;
-  color: #1d267d;
-`;
-
-export const HabitDescription = styled.p`
-  color: #333;
-  margin: 10px 0;
-`;
-
-export const HabitProgress = styled.div`
+export const Progress = styled.div`
+  margin-bottom: 12px;
   font-weight: bold;
-  color: #4caf50; /* Green color for progress */
+  color: var(--success);
 `;

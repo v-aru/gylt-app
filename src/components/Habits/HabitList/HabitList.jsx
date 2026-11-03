@@ -1,43 +1,36 @@
-import { HabitCheckbox, HabitDetails, HabitName, HabitItem } from "./HabitListStyles";
+import { List, HabitItem, HabitDetails, HabitName, HabitMeta, HabitCheckbox } from "./HabitListStyles";
+import { MutedText } from "@/components/UI/UI";
+import { isHabitDoneOn } from "@/lib/dates";
 
+const FREQUENCY_LABELS = { daily: "Daily", weekly: "Weekly", monthly: "Monthly" };
 
-export default function HabitList({ habits, onToggleHabit, onEditHabit, renderItem }) {
-
-  // const handleCheckboxChange = (habit) => {
-  //   const updatedHabit = { ...habit, completed: !habit.completed }; // Toggle completed status
-  //   onToggleHabit(updatedHabit); // Use the parent function to update the habit status
-  // };
-
-  const today = new Date().toISOString().split('T')[0];
+export default function HabitList({ habits, date, onToggleHabit, onEditHabit, canCheck = true, emptyMessage = "No habits due on this day." }) {
+  if (habits.length === 0) {
+    return <MutedText>{emptyMessage}</MutedText>;
+  }
 
   return (
-    <div>
-      {habits.length === 0 ? (
-        <p>No habits for selected day or filter!</p>
-      ) : (
-      habits.map((habit) => (
-        <HabitItem key={habit._id} onClick={() => onEditHabit && onEditHabit(habit)}>
-          {renderItem ? (
-              renderItem(habit)
-            ) : (
-              <>
-          <HabitDetails>
-            <HabitName completed={habit.completedDates?.includes(today)}>
-              {habit.habitName}
-            </HabitName>
-
-          </HabitDetails>
-          <HabitCheckbox
-            type="checkbox"
-            checked={habit.completedDates?.includes(today)} 
-            onClick={(e) => e.stopPropagation()} 
-            onChange={() => onToggleHabit(habit._id)}
-          />
-          </>
-        )}
-        </HabitItem>
-      ))
-    )}
-    </div>
+    <List>
+      {habits.map((habit) => {
+        const isDone = isHabitDoneOn(habit, date);
+        return (
+          <HabitItem key={habit._id} $color={habit.color}>
+            <HabitCheckbox
+              type="checkbox"
+              checked={isDone}
+              disabled={!canCheck}
+              onChange={() => onToggleHabit(habit, date)}
+              aria-label={`Mark ${habit.habitName} as done`}
+            />
+            <HabitDetails type="button" onClick={() => onEditHabit?.(habit)} disabled={!onEditHabit}>
+              <HabitName $completed={isDone}>{habit.habitName}</HabitName>
+              <HabitMeta>
+                {habit.category} · {FREQUENCY_LABELS[habit.frequency] || (habit.days || []).join(", ")}
+              </HabitMeta>
+            </HabitDetails>
+          </HabitItem>
+        );
+      })}
+    </List>
   );
 }

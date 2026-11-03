@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
-import { ChevronDoubleLeft, ChevronDoubleRight, ChevronLeft, ChevronRight } from "../../../public/assets";
+import { ChevronDoubleLeft, ChevronDoubleRight, ChevronLeft, ChevronRight } from "@/components/Icons";
 
 const CalendarContainer = styled.div`
   display: flex;
@@ -50,13 +50,15 @@ const DaysGrid = styled.div`
   text-align: center;
 `;
 
-const Day = styled.div`
+const Day = styled.button`
+  border: none;
+  font: inherit;
   padding: 10px;
   border-radius: 5px;
   text-align: center;
   cursor: pointer;
-  background-color: ${({ isToday, isSelected }) => (isToday ? "#1d267d" : isSelected ? "#b6d4f5" : "transparent")};
-  color: ${({ isCurrentMonth }) => (isCurrentMonth ? 'black' : '#ccc')}; 
+  background-color: ${({ $isToday, $isSelected }) => ($isToday ? "#1d267d" : $isSelected ? "#b6d4f5" : "transparent")};
+  color: ${({ $isToday, $isCurrentMonth }) => ($isToday ? "white" : $isCurrentMonth ? "black" : "#ccc")};
   &:hover {
     background-color: #f0f0f0;
   }
@@ -123,7 +125,7 @@ const DashboardCalendar = () => {
       
         for (let i = firstDayOfMonth - 1; i >= 0; i--) {
             days.push(
-                <Day key={`prev-${i}`} isCurrentMonth={false} onClick={() => handleDateClick(daysInPrevMonth - i, false)}>
+                <Day key={`prev-${i}`} $isCurrentMonth={false} onClick={() => handleDateClick(daysInPrevMonth - i, false)}>
                     {daysInPrevMonth - i}
                 </Day>
             );
@@ -142,9 +144,9 @@ const DashboardCalendar = () => {
             days.push(
                 <Day
                     key={`current-${day}`}
-                    isToday={isToday}
-                    isSelected={isSelected}
-                    isCurrentMonth={true}
+                    $isToday={isToday}
+                    $isSelected={isSelected}
+                    $isCurrentMonth
                     onClick={() => handleDateClick(day, true)}
                 >
                     {day}
@@ -158,7 +160,7 @@ const DashboardCalendar = () => {
     
         for (let j = 1; j <= remainingCells; j++) {
             days.push(
-                <Day key={`next-${j}`} isCurrentMonth={false} onClick={() => handleDateClick(j, false)}>
+                <Day key={`next-${j}`} $isCurrentMonth={false} onClick={() => handleDateClick(j, false)}>
                     {j}
                 </Day>
             );
@@ -170,21 +172,21 @@ const DashboardCalendar = () => {
     return (
       <CalendarContainer>
         <Header>
-          <ArrowButton onClick={handlePrevYear}>
+          <ArrowButton type="button" onClick={handlePrevYear}>
             <ChevronDoubleLeft/>
           </ArrowButton>
 
-          <ArrowButton onClick={handlePrevMonth}>
+          <ArrowButton type="button" onClick={handlePrevMonth}>
             <ChevronLeft />
           </ArrowButton>
 
           <h2>{currentDate.toLocaleString('default', { month: 'long' })} {currentDate.getFullYear()}</h2>
 
-          <ArrowButton onClick={handleNextMonth}>
+          <ArrowButton type="button" onClick={handleNextMonth}>
             <ChevronRight />
           </ArrowButton>
 
-          <ArrowButton onClick={handleNextYear}>
+          <ArrowButton type="button" onClick={handleNextYear}>
             <ChevronDoubleRight/>
           </ArrowButton>
           

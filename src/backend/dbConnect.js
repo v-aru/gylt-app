@@ -1,15 +1,27 @@
 import mongoose from "mongoose";
 
-console.log("mongodbURI: ", process.env.MONGODB_URI);
-const dbConnect = async () => {
-  if (mongoose.connection.readyState >= 1) return;
+// Reuse the connection across hot reloads and serverless invocations.
+let cached = global.mongoose;
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
 
-  try {
-    await mongoose.connect(process.env.MONGODB_URI);
-    console.log('MongoDB connected');
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
+const dbConnect = async () => {
+  if (cached.conn) return cached.conn;
+
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    throw new Error("MONGODB_URI is not set. Add it to .env.local (see .env.example).");
   }
+
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(uri).catch((error) => {
+      cached.promise = null;
+      throw error;
+    });
+  }
+  cached.conn = await cached.promise;
+  return cached.conn;
 };
 
 export default dbConnect;

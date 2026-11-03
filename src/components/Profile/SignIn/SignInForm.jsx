@@ -1,77 +1,48 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useRouter } from 'next/router'; 
-import { EyeButton, InputField, LoginButton } from '../../../../styles/ProfileStyles';
-import CloseEye from '../../../../public/assets/CloseEye';
-import OpenEye from '../../../../public/assets/OpenEye';
-import { signIn } from 'next-auth/react';
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { EyeButton, Form, InputField, LoginButton, Message } from "../../../../styles/ProfileStyles";
+import { CloseEye, OpenEye } from "@/components/Icons";
 
-const SignInForm = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
-    const [showPassword, setShowPassword] = useState('');
+const SignInForm = ({ initialEmail = "" }) => {
+  const [email, setEmail] = useState(initialEmail);
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const router = useRouter();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+    const result = await signIn("credentials", { email, password, redirect: false });
+    if (result?.error) {
+      setMessage("Wrong email or password.");
+      setIsSubmitting(false);
+    }
+    // On success the session updates and the profile page re-renders.
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await axios.post('/api/signin', {
-                email,
-                password, 
-            },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                }
-            });
-            console.log('Response data:', response.data);
-
-            
-            localStorage.setItem('token', response.data.token);
-            if (response.status === 200) {
-                setMessage('Sign in successful!');
-                router.push('/');
-            }
-        } catch (error) {
-            console.error('Error:', error); 
-            setMessage('Something went wrong. Please try again.');
-        }
-    };
-
-    return (
-        <>
-        <form onSubmit={handleSubmit}>
-            <InputField
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-            />
-            <div style={{ position: 'relative', width: '100%' }}>
-                <InputField
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-                <EyeButton
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                >
-                    {showPassword ? <OpenEye /> : <CloseEye />}
-                </EyeButton>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%', position: 'relative', right: '-10px' }}>
-                <LoginButton type="submit">Sign In</LoginButton>
-            </div>
-            {message && <p>{message}</p>}
-        </form>
-        </>
-    );
+  return (
+    <Form onSubmit={handleSubmit} style={{ width: "100%" }}>
+      <InputField type="email" placeholder="Email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+      <div style={{ position: "relative", width: "100%" }}>
+        <InputField
+          type={showPassword ? "text" : "password"}
+          placeholder="Password"
+          autoComplete="current-password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <EyeButton type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword(!showPassword)}>
+          {showPassword ? <OpenEye /> : <CloseEye />}
+        </EyeButton>
+      </div>
+      <LoginButton type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Signing in…" : "Sign In"}
+      </LoginButton>
+      {message && <Message>{message}</Message>}
+    </Form>
+  );
 };
 
 export default SignInForm;
