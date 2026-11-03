@@ -1,14 +1,12 @@
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities; */
-/* @import url("https://fonts.googleapis.com/css2?family=Allura&family=Qwitcher+Grypen:wght@400;700&display=swap"); */
-@import url("https://fonts.googleapis.com/css2?family=Qwitcher+Grypen:wght@400;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Allura&display=swap");
-
 :root {
-  --background: #ffffff;
-  /* --background: #f4f4f4; */
+  --background: #f4f4f4;
   --foreground: #171717;
+  --primary: #1d267d;
+  --accent: #7b2cbf;
+  --muted: #5c677d;
+  --card: #ffffff;
+  --danger: #c0392b;
+  --success: #4caf50;
 }
 
 *,
@@ -19,22 +17,37 @@
   box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   color: var(--foreground);
   background: var(--background);
-  margin: 0;
-  display: block;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
 }
 
-/* @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+a {
+  color: inherit;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid #b6a6ca;
+  outline-offset: 2px;
+}
+
+/* Respect the OS "reduce motion" setting. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
-} */
+}

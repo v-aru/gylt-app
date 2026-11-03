@@ -10,7 +10,7 @@ export const Nav = styled.nav`
   justify-content: flex-start;
   height: 100vh;
   z-index: 1000;
-  width: ${({ isExpanded }) => (isExpanded ? '180px' : '70px')};
+  width: ${({ $isExpanded }) => ($isExpanded ? '180px' : '70px')};
   padding: 20px 0;
   gap: 10px;
   background-color: #3e274f;
@@ -44,16 +44,15 @@ export const NavItemsContainer = styled.div`
 
 export const NavItem = styled.div`
   display: flex;
-  // justify-content: ${({ isExpanded }) => (isExpanded ? 'flex-start' : 'center')};
   justify-content: center;
   padding: 10px 20px;
   width: 100%;
   transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
   opacity: 1;
-  transform: ${({ isExpanded }) => (isExpanded ? 'translateX(0)' : 'translateX(-10px)')};
+  transform: ${({ $isExpanded }) => ($isExpanded ? 'translateX(0)' : 'translateX(-10px)')};
   cursor: pointer; 
-  background-color: ${({ isActive }) => (isActive ? '#7b2cbf' : 'transparent')};
-  border-radius: ${({ isActive }) => (isActive ? '5px' : '0')};
+  background-color: ${({ $isActive }) => ($isActive ? '#7b2cbf' : 'transparent')};
+  border-radius: ${({ $isActive }) => ($isActive ? '5px' : '0')};
 
   a {
     display: flex;
@@ -61,7 +60,7 @@ export const NavItem = styled.div`
     text-align: left;
     width: 100%;
     color: #B5C0D0;
-    gap: ${({ isExpanded }) => (isExpanded ? '10px' : '0px')};
+    gap: ${({ $isExpanded }) => ($isExpanded ? '10px' : '0px')};
 
     &:hover {
       background-color: #5D536B;
@@ -80,12 +79,20 @@ export const NavItem = styled.div`
   }
 
   span {
-    opacity: ${({ isExpanded }) => (isExpanded ? 1 : 0)}; 
+    opacity: ${({ $isExpanded }) => ($isExpanded ? 1 : 0)}; 
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-    transform: ${({ isExpanded }) => (isExpanded ? 'translateY(0)' : 'translateY(-10px)')};
+    transform: ${({ $isExpanded }) => ($isExpanded ? 'translateY(0)' : 'translateY(-10px)')};
     white-space: nowrap;
-    display: ${({ isExpanded }) => (isExpanded ? 'inline-block' : 'none')};
-    width: ${({ isExpanded }) => (isExpanded ? 'auto' : '0')};
+    display: ${({ $isExpanded }) => ($isExpanded ? 'inline-block' : 'none')};
+    width: ${({ $isExpanded }) => ($isExpanded ? 'auto' : '0')};
     overflow: hidden;
   }
+`;
+export const ToggleButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
 `;

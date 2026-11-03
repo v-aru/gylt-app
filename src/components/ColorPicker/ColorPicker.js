@@ -1,51 +1,45 @@
 import styled from "styled-components";
 
-export const colors = ['#DF2E38', '#FFAD60', '#F6E96B', '#88D66C', '#03AED2', '#CAEDFF', '#ADA2FF','#4F1787'];
+export const colors = ["#DF2E38", "#FFAD60", "#F6E96B", "#88D66C", "#03AED2", "#CAEDFF", "#ADA2FF", "#4F1787"];
 
 const ColorGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 20px; 
-  justify-content: center; 
+  gap: 14px;
+  justify-content: center;
   align-items: center;
   margin: 15px 0;
   padding: 5px;
 `;
 
-const ColorCircle = styled.div`
+const ColorCircle = styled.button.attrs({ type: "button" })`
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background-color: ${(props) => props.color};
+  background-color: ${({ $color }) => $color};
   cursor: pointer;
-  border: 2px solid transparent;
+  border: 2px solid ${({ $isSelected }) => ($isSelected ? "#333" : "transparent")};
+  transform: ${({ $isSelected }) => ($isSelected ? "scale(1.15)" : "none")};
   transition: border 0.3s ease, transform 0.2s ease;
 
   &:hover {
-    border: 2px solid #333; /* Highlight on hover */
+    border-color: #333;
     transform: scale(1.1);
   }
-
-  ${({ isSelected }) =>
-    isSelected &&
-    `
-    border: 2px solid #333;
-  `}
 `;
 
-export const CustomColorPicker = ({ selectedColor, onSelectColor }) => {
+// With `allowNone`, clicking the selected color clears it (used for filters).
+export const CustomColorPicker = ({ selectedColor, onSelectColor, allowNone = false }) => {
   return (
     <ColorGrid>
       {colors.map((color) => (
         <ColorCircle
           key={color}
-          color={color}
-          onClick={() => {
-            onSelectColor(selectedColor === color ? null : color);
-          }}
-          style={{
-            border: selectedColor === color ? '2px solid #000' : '2px solid transparent'
-          }}
+          $color={color}
+          $isSelected={selectedColor === color}
+          aria-label={`Color ${color}`}
+          aria-pressed={selectedColor === color}
+          onClick={() => onSelectColor(allowNone && selectedColor === color ? null : color)}
         />
       ))}
     </ColorGrid>

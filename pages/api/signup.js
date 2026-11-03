@@ -1,44 +1,34 @@
-import dbConnect from '@/backend/dbConnect'; 
-import User from '@/backend/model/User'; 
-import jwt from 'jsonwebtoken';
+import dbConnect from "@/backend/dbConnect";
+import User from "@/backend/model/User";
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Only POST requests are allowed.' });
+  if (req.method !== "POST") {
+    res.setHeader("Allow", ["POST"]);
+    return res.status(405).json({ message: "Only POST requests are allowed." });
   }
 
-  const { username, email, password, firstName, lastName, dob, gender, location, age } = req.body;
+  const { username, email, password, firstName, lastName, dateOfBirth, gender, city } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required." });
+  }
+  if (password.length < 8) {
+    return res.status(400).json({ message: "Password must be at least 8 characters." });
+  }
 
   try {
     await dbConnect();
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
-      return res.status(400).json({ message: 'User with this email already exists.' });
+      return res.status(400).json({ message: "An account with this email already exists." });
     }
 
-    const newUser = new User({
-      username,
-      email,
-      password,
-      firstName,
-      lastName,
-      dateOfBirth,
-      gender,
-      location,
-      age
-    });
+    await User.create({ username, email, password, firstName, lastName, dateOfBirth, gender, city });
 
-    await newUser.save();
-
-    // JWT creation
-    const token = jwt.sign({ userId: newUser._id, email: newUser.email }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
-    });
-
-    res.status(201).json({ message: 'User created successfully!', token });
+    res.status(201).json({ message: "Account created!" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error("Error signing up:", error);
+    res.status(500).json({ message: "Could not create your account. Please try again." });
   }
 }

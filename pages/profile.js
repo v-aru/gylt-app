@@ -1,166 +1,203 @@
-import React, { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
-import { ProfileContainer, ProfileCard, ProfileImageWrapper, ProfileImage, ProfileDetails, ProfileName, ProfileEmail, SignInOptions, SignInButton, SignOutButton, Icon, UserInfo, EditButton, SaveButton, ExitEditingButton, SaveBackButtonsContainer, InputField, NewAccount} from '../styles/ProfileStyles';
-import { signIn, signOut } from "next-auth/react";
-import SignUpForm from "@/components/Profile/SignUp/SignUpForm";
-import Layout from "@/components/Layout/Layout";
-import { useRouter } from 'next/router'; 
+import { useEffect, useState } from "react";
+import { getProviders, signIn, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import {
+  ProfileContainer,
+  ProfileCard,
+  ProfileImageWrapper,
+  ProfileImage,
+  ProfileDetails,
+  ProfileName,
+  ProfileEmail,
+  SignInOptions,
+  SignInButton,
+  SignOutButton,
+  Icon,
+  UserInfo,
+  EditButton,
+  SaveButton,
+  ExitEditingButton,
+  SaveBackButtonsContainer,
+  InputField,
+  NewAccount,
+  Message,
+} from "../styles/ProfileStyles";
 import SignInForm from "@/components/Profile/SignIn/SignInForm";
-import useLocalStorageState from 'use-local-storage-state';
+import SignUpForm from "@/components/Profile/SignUp/SignUpForm";
+import SkeletonList from "@/components/UI/Skeleton";
+import { apiRequest } from "@/lib/api";
 
-const ProfilePage = ( ) => {
-  const { data: session } = useSession();
+const OAUTH_ICONS = {
+  google: "/images/googleIcon.png",
+  github: "/images/githubIcon.png",
+  facebook: "/images/facebookIcon.png",
+};
+
+const PROFILE_FIELDS = [
+  { key: "username", label: "Username" },
+  { key: "firstName", label: "First name" },
+  { key: "lastName", label: "Last name" },
+  { key: "dateOfBirth", label: "Date of birth", type: "date" },
+  { key: "gender", label: "Gender" },
+  { key: "city", label: "City" },
+];
+
+function ageFrom(dateOfBirth) {
+  if (!dateOfBirth) return null;
+  const birth = new Date(dateOfBirth);
+  const today = new Date();
+  let age = today.getFullYear() - birth.getFullYear();
+  if (today < new Date(today.getFullYear(), birth.getMonth(), birth.getDate())) age -= 1;
+  return age;
+}
+
+function SignedInProfile({ session }) {
+  const [profile, setProfile] = useState({});
+  const [draft, setDraft] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-  const [isSigningIn, setIsSigningIn] = useState(false);
-  const [isSigningUp, setIsSigningUp] = useState(false);
-  const router = useRouter(); 
-
-  const [age, setAge] = useState('');
-  const [gender, setGender] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
-  const [city, setCity] = useState('');
-  const [username, setUsername] = useState('');
-  const [profileImage, setProfileImage] = useLocalStorageState("profileImage", {
-    defaultValue: "/images/ProfileImg.svg", 
-  });
-
-  const handleSave = async () => {
-    const userProfileData = { username, age, gender, dateOfBirth, city };
-    const token = session?.user?.token;
-  
-    try {
-      const response = await fetch('/api/updateProfile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' , 'Authorization': `Bearer ${token}`},
-        body: JSON.stringify(userProfileData),
-      });
-  
-      if (response.ok) {
-        setIsEditing(false);
-      } else {
-        console.error('Error updating profile');
-      }
-    } catch (error) {
-      console.error('Error saving user info:', error);
-    }
-  };
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    if (session?.user?.image) {
-      setProfileImage(session.user.image); 
-    }
+    apiRequest("/api/profile")
+      .then(setProfile)
+      .catch((error) => setMessage(error.message));
+  }, []);
 
-    if (!session) return;
-
-    const fetchUserProfile = async () => {
-      try {
-        const response = await fetch(`/api/getProfile?userId=${session.user.id}`);
-        const data = await response.json();
-  
-        if (response.ok) {
-          setUsername(data.username);
-          setAge(data.age);
-          setGender(data.gender);
-          setDateOfBirth(data.dateOfBirth);
-          setCity(data.city);
-        } else {
-          console.error('Error fetching user profile');
-        }
-      } catch (error) {
-        console.error('Error fetching user profile:', error);
-      }
-    };
-  
-    fetchUserProfile();
-  }, [session, setProfileImage]);
-
-  const exitEditing = () => {
-    setIsEditing(false);
+  const startEditing = () => {
+    setDraft(profile);
+    setIsEditing(true);
   };
 
+  const handleSave = async () => {
+    try {
+      setProfile(await apiRequest("/api/profile", { method: "PUT", body: draft }));
+      setIsEditing(false);
+      setMessage("");
+    } catch (error) {
+      setMessage(error.message);
+    }
+  };
+
+  const age = ageFrom(profile.dateOfBirth);
+
   return (
-    <Layout>
+    <>
+      <ProfileImageWrapper>
+        <ProfileImage src={session.user.image || "/images/ProfileImg.svg"} alt="Profile picture" />
+      </ProfileImageWrapper>
+      <ProfileName>Welcome, {profile.firstName || session.user.name || "friend"}!</ProfileName>
+      <ProfileEmail>{session.user.email}</ProfileEmail>
+
+      {isEditing ? (
+        <>
+          {PROFILE_FIELDS.map(({ key, label, type = "text" }) => (
+            <InputField
+              key={key}
+              type={type}
+              aria-label={label}
+              placeholder={label}
+              value={draft[key] || ""}
+              onChange={(e) => setDraft((prev) => ({ ...prev, [key]: e.target.value }))}
+            />
+          ))}
+          <SaveBackButtonsContainer>
+            <SaveButton type="button" onClick={handleSave}>
+              Save
+            </SaveButton>
+            <ExitEditingButton type="button" onClick={() => setIsEditing(false)}>
+              Back
+            </ExitEditingButton>
+          </SaveBackButtonsContainer>
+        </>
+      ) : (
+        <>
+          <UserInfo>
+            {PROFILE_FIELDS.map(({ key, label }) => (
+              <p key={key}>
+                <strong>{label}:</strong> {profile[key] || "Not set"}
+              </p>
+            ))}
+            {age !== null && (
+              <p>
+                <strong>Age:</strong> {age}
+              </p>
+            )}
+          </UserInfo>
+          <EditButton type="button" onClick={startEditing}>
+            Edit Profile
+          </EditButton>
+        </>
+      )}
+
+      {message && <Message>{message}</Message>}
+
+      <SignOutButton type="button" onClick={() => signOut({ callbackUrl: "/profile" })}>
+        Sign Out
+      </SignOutButton>
+    </>
+  );
+}
+
+function SignedOutProfile({ isSigningUp, setIsSigningUp }) {
+  const { query } = useRouter();
+  const [oauthProviders, setOauthProviders] = useState([]);
+
+  useEffect(() => {
+    getProviders().then((providers) =>
+      setOauthProviders(Object.values(providers || {}).filter((provider) => provider.type === "oauth"))
+    );
+  }, []);
+
+  return (
+    <>
+      <ProfileName>{isSigningUp ? "Create your account" : "Welcome back!"}</ProfileName>
+      {query.error && !isSigningUp && <Message>Sign-in failed. Please try again.</Message>}
+
+      {isSigningUp ? <SignUpForm /> : <SignInForm />}
+
+      {!isSigningUp && oauthProviders.length > 0 && (
+        <SignInOptions>
+          {oauthProviders.map((provider) => (
+            <SignInButton key={provider.id} type="button" onClick={() => signIn(provider.id, { callbackUrl: "/" })}>
+              {OAUTH_ICONS[provider.id] && <Icon src={OAUTH_ICONS[provider.id]} alt="" />}
+              Sign in with {provider.name}
+            </SignInButton>
+          ))}
+        </SignInOptions>
+      )}
+    </>
+  );
+}
+
+const ProfilePage = () => {
+  const { data: session, status } = useSession();
+  const [isSigningUp, setIsSigningUp] = useState(false);
+
+  return (
     <ProfileContainer>
       <ProfileCard>
         <ProfileDetails>
-        {session ? ( //User is signed in
-            <>
-            <ProfileImageWrapper>
-              <ProfileImage 
-                src={profileImage} 
-                alt="Profile Picture" 
-                width="100%"
-                height="100%"
-              />
-              </ProfileImageWrapper>
-              <ProfileName>Welcome, {session.user.name}!</ProfileName>
-              <ProfileEmail>{session.user.email}</ProfileEmail>
-
-              {!isEditing ? (
-                <>
-                  <UserInfo>
-                    <p><strong>Username:</strong> {username || "Not set"}</p>
-                    <p><strong>Age:</strong> {age || "Not set"}</p>
-                    <p><strong>Gender:</strong> {gender || "Not set"}</p>
-                    <p><strong>Date of Birth:</strong> {dateOfBirth || "Not set"}</p>
-                    <p><strong>City:</strong> {city || "Not set"}</p>
-                  </UserInfo>
-
-                  <EditButton onClick={() => setIsEditing(true)}>Edit Profile</EditButton>
-                </>
-              ) : (
-                <>
-                  <InputField type="text" placeholder="Enter username" value={username} onChange={(e) => setUsername(e.target.value)} />
-                  <InputField type="number" placeholder="Enter your age" value={age} onChange={(e) => setAge(e.target.value)} />
-                  <InputField type="text" placeholder="Enter your gender" value={gender} onChange={(e) => setGender(e.target.value)} />
-                  <InputField type="date" placeholder="Enter your date of birth" value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} />
-                  <InputField type="text" placeholder="Enter your city" value={city} onChange={(e) => setCity(e.target.value)} />
-                  <SaveBackButtonsContainer>
-                    <SaveButton onClick={handleSave}>Save</SaveButton>
-                    <ExitEditingButton ExitEditingButton onClick={exitEditing}>Back</ExitEditingButton>
-                  </SaveBackButtonsContainer>
-                </>
-              )}
-
-              <SignOutButton onClick={() => signOut()}>Sign Out</SignOutButton>
-            </>
-          ) : ( //User is not signed up/signed in
-            <>
-              <ProfileName>Welcome!</ProfileName>
-              {isSigningUp ? (
-                <SignUpForm />
-              ) : isSigningIn ? ( //User is not signed in
-                <SignInForm />
-              ) : ( //User is signing in using an alternate method
-                <>
-                <SignInOptions>
-                  <SignInButton onClick={() => signIn("google")}>
-                    <Icon src="/images/googleIcon.png" alt="Google icon" />
-                    Sign in with Google
-                  </SignInButton>
-                  <SignInButton onClick={() => signIn("github")}>
-                    <Icon src="/images/githubIcon.png" alt="GitHub icon" />
-                    Sign in with GitHub
-                  </SignInButton>
-                  <SignInButton onClick={() => signIn("facebook")}>
-                    <Icon src="/images/facebookIcon.png" alt="Facebook icon" />
-                    Sign in with Facebook
-                  </SignInButton>
-                </SignInOptions>
-            </>
+          {status === "loading" ? (
+            <div style={{ width: "100%" }}>
+              <SkeletonList rows={4} height={40} />
+            </div>
+          ) : session ? (
+            <SignedInProfile session={session} />
+          ) : (
+            <SignedOutProfile isSigningUp={isSigningUp} setIsSigningUp={setIsSigningUp} />
           )}
-          <SignInOptions>
-            <SignInButton onClick={() => setIsSigningIn(!isSigningIn)}>
-              {isSigningIn ? "Use Alternate Sign In" : "Back to Email Sign In"}
-            </SignInButton>
-          </SignInOptions>
-          </>
-          )}
-        </ProfileDetails> 
+        </ProfileDetails>
       </ProfileCard>
-      <NewAccount> Don&apos;t have an account? &nbsp;<a href="#" onClick={() => setIsSigningUp(true)}>Sign up</a>&nbsp;today!</NewAccount>
+
+      {status === "unauthenticated" && (
+        <NewAccount>
+          {isSigningUp ? "Already have an account?" : "Don't have an account?"}{" "}
+          <a href="#" onClick={(e) => { e.preventDefault(); setIsSigningUp(!isSigningUp); }}>
+            {isSigningUp ? "Sign in" : "Sign up today!"}
+          </a>
+        </NewAccount>
+      )}
     </ProfileContainer>
-    </Layout>
   );
 };
 

@@ -5,7 +5,7 @@ export const ProfileContainer = styled.div`
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
+  padding: 20px 0;
   background-color: #f4f4f4;
   // background-color: #323052;
 `;
@@ -281,5 +281,5 @@ export const SignUpFormContainer = styled.div`
   height: auto;
   padding: 20px;
   box-sizing: border-box;
-  margin-top: 50px; // Add a margin to push the form down
+  padding: 0;
 `;

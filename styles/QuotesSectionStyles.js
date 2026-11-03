@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const QuotesSection = styled.div`
   font-family: 'Playground', serif;
-  width: 60%;
+  width: min(600px, 100%);
   display: flex;
   justify-content: center;
   align-items: center;

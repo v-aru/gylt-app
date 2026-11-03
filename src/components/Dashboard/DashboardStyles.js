@@ -1,55 +1,55 @@
 import styled from "styled-components";
+import { liftOnHover, staggered } from "../../../styles/animations";
 
 export const DashboardContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  background-color: #f4f4f4;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   gap: 20px;
-  padding: 20px;
+  margin-top: 30px;
+  text-align: left;
 `;
 
-export const SectionCard = styled.div`
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`;
-
-export const SectionTitle = styled.h2`
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 15px;
-`;
-
-export const HabitCard = styled.div`
+export const SectionCard = styled.section`
+  display: flex;
+  flex-direction: column;
   background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  width: 300px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s;
+  ${liftOnHover}
 
-  &:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  /* Cards cascade in one after another. */
+  &:nth-child(1) {
+    ${staggered(1, 80)}
+  }
+  &:nth-child(2) {
+    ${staggered(2, 80)}
+  }
+  &:nth-child(3) {
+    ${staggered(3, 80)}
   }
 `;
 
-export const HabitTitle = styled.h2`
-  font-size: 1.5rem;
-  color: #1d267d;
+export const SectionTitle = styled.h2`
+  font-size: 1.3rem;
+  color: var(--primary);
+  margin-bottom: 15px;
 `;
 
-export const HabitDescription = styled.p`
-  color: #333;
-  margin: 10px 0;
-`;
+export const CardFooter = styled.div`
+  margin-top: auto;
+  padding-top: 15px;
+  text-align: right;
 
-export const HabitProgress = styled.div`
-  font-weight: bold;
-  color: #4caf50; /* Green color for progress */
+  a {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateX(4px);
+    }
+  }
 `;

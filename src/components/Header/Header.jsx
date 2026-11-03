@@ -1,33 +1,25 @@
-"use client";
-import React from 'react';
-import styled from 'styled-components';
-import Logo from '../../../public/assets/Logo';
-
+import Link from "next/link";
+import styled from "styled-components";
+import { Logo } from "@/components/Icons";
 
 const HeaderContainer = styled.header`
-  // background-color: #323052;
-  background-color: #f4f4f4;
-  color: white;
-  text-align: center;
   display: flex;
-  // border-radius: 20px;
-  flex-direction: column;
-  align-items: center;
-`;
+  justify-content: center;
+  padding-top: 10px;
 
-const Title = styled.h1`
-  margin: 0;
-  font-size: 2rem;
+  svg {
+    max-width: 160px;
+    height: auto;
+  }
 `;
 
 const Header = () => {
   return (
-    <>
     <HeaderContainer>
-      <Logo alt="GYLT Logo"/>
-      {/* <Title>GYLT App</Title> */}
+      <Link href="/" aria-label="GYLT home">
+        <Logo />
+      </Link>
     </HeaderContainer>
-    </>
   );
 };
 

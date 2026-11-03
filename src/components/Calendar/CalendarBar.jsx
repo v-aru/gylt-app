@@ -1,69 +1,49 @@
-import React, { useState } from "react";
-import { CalendarBarContainer, CalendarDaysContainer, NavigationButton, DayLabel, DateLabel, DayContainer, CalendarHeader } from "./CalendarStyles";
-import { ChevronLeft, ChevronRight } from "../../../public/assets";
+import { CalendarBarContainer, CalendarDaysContainer, NavigationButton, DayLabel, DateLabel, DayContainer, CalendarHeader, MonthLabel, TodayButton } from "./CalendarStyles";
+import { ChevronLeft, ChevronRight } from "@/components/Icons";
+import { WEEKDAYS, addDays, isSameDay, weekOf } from "@/lib/dates";
 
-const CalendarBar = () => {
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const CalendarBar = ({ selectedDate, onSelectDate }) => {
   const today = new Date();
-  const [currentDate, setCurrentDate] = useState(today);
-  const [selectedDay, setSelectedDay] = useState(today.getDay());
+  const weekDates = weekOf(selectedDate);
 
-  
-  const getCurrentWeekDates = (date) => {
-    const startOfWeek = new Date(date);
-    const dayOffset = startOfWeek.getDay() === 0 ? -6 : 1 - startOfWeek.getDay();
-    startOfWeek.setDate(startOfWeek.getDate() + dayOffset);
+  return (
+    <CalendarBarContainer>
+      <MonthLabel>
+        {selectedDate.toLocaleDateString(undefined, { month: "long", year: "numeric" })}
+        {!isSameDay(selectedDate, today) && (
+          <TodayButton type="button" onClick={() => onSelectDate(today)}>
+            Today
+          </TodayButton>
+        )}
+      </MonthLabel>
+      <CalendarHeader>
+        <NavigationButton type="button" aria-label="Previous week" onClick={() => onSelectDate(addDays(selectedDate, -7))}>
+          <ChevronLeft />
+        </NavigationButton>
 
-    const weekDates = [];
-    for (let i = 0; i < 7; i++) {
-      const nextDate = new Date(startOfWeek);
-      nextDate.setDate(startOfWeek.getDate() + i);
-      weekDates.push(nextDate);
-    }
-    return weekDates;
-  };
-
-  const handleNavigation = (direction) => {
-    const newDate = new Date(currentDate);
-    newDate.setDate(currentDate.getDate() + direction * 7); // Move by a week
-    setCurrentDate(newDate);
-    setSelectedDay(null);
-  };
-
-  const handleDayClick = (index) => {
-    setSelectedDay(index);
-  }
-
-  const currentWeekDates = getCurrentWeekDates(currentDate);
-  
-    return (
-      <CalendarBarContainer>
-        <CalendarHeader>
-          <NavigationButton onClick={() => handleNavigation(-1)}>
-            <ChevronLeft/>
-          </NavigationButton>
-          
-          <CalendarDaysContainer>
-            {days.map((day, index) => (
-              <DayContainer
-              key={index}
-              isSelected={index === selectedDay} // Mark as selected if it’s the selected day
-              onClick={() => handleDayClick(index)}
-              >
-                <DayLabel>{day}</DayLabel>
-                <DateLabel>{currentWeekDates[index].getDate()}</DateLabel>
+        <CalendarDaysContainer>
+          {weekDates.map((date, index) => (
+            <DayContainer
+              key={date.toDateString()}
+              type="button"
+              aria-label={date.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" })}
+              aria-pressed={isSameDay(date, selectedDate)}
+              $isSelected={isSameDay(date, selectedDate)}
+              $isToday={isSameDay(date, today)}
+              onClick={() => onSelectDate(date)}
+            >
+              <DayLabel>{WEEKDAYS[index]}</DayLabel>
+              <DateLabel>{date.getDate()}</DateLabel>
             </DayContainer>
-            ))}
-          </CalendarDaysContainer>
+          ))}
+        </CalendarDaysContainer>
 
-          <NavigationButton onClick={() => handleNavigation(1)}>
-            <ChevronRight/>
-          </NavigationButton>
-
-        </CalendarHeader>
-
-      </CalendarBarContainer>
-    );
-  };
+        <NavigationButton type="button" aria-label="Next week" onClick={() => onSelectDate(addDays(selectedDate, 7))}>
+          <ChevronRight />
+        </NavigationButton>
+      </CalendarHeader>
+    </CalendarBarContainer>
+  );
+};
 
 export default CalendarBar;

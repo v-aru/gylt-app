@@ -1,30 +1,30 @@
-import React, { useContext } from 'react';
-import styled from 'styled-components';
-import { HabitsContext } from '@/context/HabitsContext';
-import DashboardHabitCard from './DashboardHabitCard';
-
-const HabitListContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-    padding: 10px;
-    background-color: #f3f3f3;
-    border-radius: 8px;
-`;
+import HabitList from "@/components/Habits/HabitList/HabitList";
+import DayProgress from "@/components/UI/DayProgress";
+import SkeletonList from "@/components/UI/Skeleton";
+import { useHabits } from "@/context/HabitsContext";
+import { isHabitDoneOn, isHabitDueOn } from "@/lib/dates";
 
 const DashboardHabitList = () => {
-    const { habits, isLoading } = useContext(HabitsContext);
-    if (isLoading) return <p>Loading...</p>;
-    if (!habits || habits.length === 0) return <p>No habits for today!</p>;
+  const { habits, isLoading, toggleHabit } = useHabits();
+  const today = new Date();
 
-    return (
-        <HabitListContainer>
-            {habits.map(habit => (
-               <DashboardHabitCard key={habit._id} habit={habit} />
-            ))}
-        </HabitListContainer>
-    );
+  if (isLoading) return <SkeletonList rows={2} />;
+
+  const dueToday = habits.filter((habit) => isHabitDueOn(habit, today));
+  const doneCount = dueToday.filter((habit) => isHabitDoneOn(habit, today)).length;
+
+  return (
+    <>
+      <DayProgress done={doneCount} total={dueToday.length} />
+      <HabitList
+        habits={dueToday}
+        date={today}
+        onToggleHabit={toggleHabit}
+        emptyMessage={habits.length === 0 ? "You haven't added any habits yet." : "Nothing due today. Enjoy!"}
+        emptyEmoji={habits.length === 0 ? "🌱" : "🌴"}
+      />
+    </>
+  );
 };
 
 export default DashboardHabitList;
